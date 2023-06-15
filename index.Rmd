@@ -5,7 +5,7 @@ output:
   html_document: default
   pdf_document: default
 email_address: ryanjackwood@harpethriver.org
-github_repo: https://rjwood11.github.io/drought_index
+github_repo: https://github.com/rjwood11/Water_Watch_Prototype
 ---
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
