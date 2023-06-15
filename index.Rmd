@@ -35,6 +35,8 @@ body {
 }
 ```
 
+Isn't this map GREAT!?
+
 ![](map.html)
 
 
