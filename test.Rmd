@@ -1,0 +1,522 @@
+---
+title: "Harpeth Conservancy's E. coli Forecast"
+---
+
+```{r warning=FALSE, setup, include=FALSE}
+
+library(rmarkdown)
+library(reticulate)
+library(tidyverse)
+library(leaflet)
+library(htmlwidgets)
+library(widgetframe)
+library(leaflet.providers)
+
+Sys.which("python")
+
+use_python("C:/Users/rwjac/miniconda3/python.exe")
+
+
+```
+
+```{python}
+import pandas as pd
+import json
+import requests
+import numpy as np
+from os import replace
+import datetime
+from datetime import datetime, timedelta
+import math
+```
+
+
+```{python}
+month = datetime.now().month
+year = datetime.now().year
+day = datetime.now().day
+
+
+
+```
+
+
+
+```{python}
+
+time = datetime.now()
+weekago_month = (time - timedelta(days=7)).month
+weekago_year = (time - timedelta(days=7)).year
+weekago_day = (time - timedelta(days=7)).day
+
+```
+
+
+
+```{python}
+day_of_year = datetime.now().timetuple().tm_yday
+B = 0.01721420632
+C = 81.75
+sindoy = math.sin(B * (day_of_year) - C)
+sindoy_list = [sindoy]*8
+
+
+```
+
+Pulling Temperature forecast data for each day from NWS's API (currently using Nashville Airport).
+
+```{python}
+NWSforecastdata = json.loads(requests.get("https://api.weather.gov/gridpoints/OHX/54,55/forecast").text)
+NWSforecastdata = NWSforecastdata['properties']['periods'][0]
+
+```
+
+
+```{python}
+
+{'number': 1,
+ 'name': 'Today',
+ 'startTime': '2023-06-07T07:00:00-05:00',
+ 'endTime': '2023-06-07T18:00:00-05:00',
+ 'isDaytime': True,
+ 'temperature': 87,
+ 'temperatureUnit': 'F',
+ 'temperatureTrend': 'falling',
+ 'probabilityOfPrecipitation': {'unitCode': 'wmoUnit:percent', 'value': 30},
+ 'dewpoint': {'unitCode': 'wmoUnit:degC', 'value': 13.88888888888889},
+ 'relativeHumidity': {'unitCode': 'wmoUnit:percent', 'value': 68},
+ 'windSpeed': '0 to 10 mph',
+ 'windDirection': 'NW',
+ 'icon': 'https://api.weather.gov/icons/land/day/smoke/tsra_sct,30?size=medium',
+ 'shortForecast': 'Areas Of Smoke then Slight Chance Showers And Thunderstorms',
+ 'detailedForecast': 'Areas of smoke before 8am, then haze between 8am and 2pm, then a slight chance of showers and thunderstorms between 2pm and 3pm, then haze and a chance of showers and thunderstorms between 3pm and 4pm, then a chance of showers and thunderstorms. Partly sunny. High near 87, with temperatures falling to around 81 in the afternoon. Northwest wind 0 to 10 mph. Chance of precipitation is 30%.'}
+
+```
+
+```{python}
+
+NWSforecastdata_df = pd.DataFrame.from_dict(NWSforecastdata)
+NWSforecastdata_df = NWSforecastdata_df[['temperature', 'probabilityOfPrecipitation','windSpeed', 'windDirection']]
+NWSforecastdata_df.columns = ['temperature', 'precipitation', 'windSpeed', 'windDirection']
+
+
+```
+
+
+
+```{python}
+
+NWSforecastdata_df['temperature'] = NWSforecastdata_df['temperature'].astype(str).astype(int)
+
+```
+
+
+
+```{python}
+
+temp_forecast = NWSforecastdata_df['temperature'][1]
+
+```
+
+```{python}
+
+temp_list = [temp_forecast]*8
+
+```
+
+
+```{python}
+
+print(temp_forecast)
+print(temp_list)
+
+```
+
+Pulling precipitation data from USGS (currently using Highway 70 location).
+
+```{python}
+prcp_url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03434500&startDT={}-{}-{}T00:00-0500&endDT={}-{}-{}T00:00-0500&parameterCd=00045&siteStatus=all".format(weekago_year, weekago_month, weekago_day, year, month, day)
+USGS_prcpdata = json.loads(requests.get(prcp_url).text)
+USGS_prcpdata = USGS_prcpdata['value']['timeSeries'][0]['values'][0]['value']
+USGS_prcpdf = pd.DataFrame.from_dict(USGS_prcpdata)
+
+
+```
+
+
+```{python}
+
+USGS_prcpdf['value'] = USGS_prcpdf['value'].astype(str).astype(float)
+
+```
+
+
+
+```{python}
+onedayprcp_df = USGS_prcpdf.iloc[576:672]
+twodayprcp_df = USGS_prcpdf.iloc[480:672]
+threedayprcp_df = USGS_prcpdf.iloc[384:672]
+fivedayprcp_df = USGS_prcpdf.iloc[192:672]
+
+
+```
+
+
+
+
+```{python}
+onedayprcp_total = onedayprcp_df['value'].sum()
+twodayprcp_total = twodayprcp_df['value'].sum()
+threedayprcp_total = threedayprcp_df['value'].sum()
+fivedayprcp_total = fivedayprcp_df['value'].sum()
+weekprcp_total = USGS_prcpdf['value'].sum()
+
+
+```
+
+
+```{python}
+
+print(onedayprcp_total, twodayprcp_total, threedayprcp_total, fivedayprcp_total, weekprcp_total)
+
+```
+
+
+```{python}
+onedayprcp_list = [onedayprcp_total]*8
+twodayprcp_list = [twodayprcp_total]*8
+threedayprcp_list = [threedayprcp_total]*8
+fivedayprcp_list = [fivedayprcp_total]*8
+weekprcp_list = [weekprcp_total]*8
+
+
+```
+
+Pulling Flow Data from USGS.
+
+```{python}
+
+jblvd_furl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03431700&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00060&siteStatus=all".format(year, month, day, year, month, day)
+jblvd_fdata = json.loads(requests.get(jblvd_furl).text)
+jblvd_fdata = jblvd_fdata['value']['timeSeries'][0]['values'][0]['value']
+jblvd_fdf = pd.DataFrame.from_dict(jblvd_fdata)
+
+```
+
+```{python}
+
+jblvd_fdf['value'] = jblvd_fdf['value'].astype(str).astype(float)
+
+jblvd_flow = jblvd_fdf['value'].sum() / 5
+print(jblvd_flow)
+
+```
+
+
+```{python}
+
+hwy100_furl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03433500&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00060&siteStatus=all".format(year, month, day, year, month, day)
+hwy100_fdata = json.loads(requests.get(hwy100_furl).text)
+hwy100_fdata = hwy100_fdata['value']['timeSeries'][0]['values'][0]['value']
+hwy100_fdf = pd.DataFrame.from_dict(hwy100_fdata)
+
+```
+
+
+```{python}
+
+hwy100_fdf['value'] = hwy100_fdf['value'].astype(str).astype(float)
+hwy100_flow = hwy100_fdf['value'].sum() / 5
+print(hwy100_flow)
+
+```
+
+
+```{python}
+
+hwy70_furl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03434500&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00060&siteStatus=all".format(year, month, day, year, month, day)
+hwy70_fdata = json.loads(requests.get(hwy70_furl).text)
+hwy70_fdata = hwy70_fdata['value']['timeSeries'][0]['values'][0]['value']
+hwy70_fdf = pd.DataFrame.from_dict(hwy70_fdata)
+
+```
+
+
+
+```{python}
+
+hwy70_fdf['value'] = hwy70_fdf['value'].astype(str).astype(float)
+hwy70_flow = hwy70_fdf['value'].sum() / 3
+print(hwy70_flow)
+
+```
+
+
+```{python}
+lpike_furl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03432350&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00060&siteStatus=all".format(year, month, day, year, month, day)
+lpike_fdata = json.loads(requests.get(lpike_furl).text)
+lpike_fdata = lpike_fdata['value']['timeSeries'][0]['values'][0]['value']
+lpike_fdf = pd.DataFrame.from_dict(lpike_fdata)
+
+
+```
+
+
+```{python}
+
+lpike_fdf['value'] = lpike_fdf['value'].astype(str).astype(float)
+lpike_flow = lpike_fdf['value'].sum() / 5
+print(lpike_flow)
+
+```
+
+
+```{python}
+
+mcreek_furl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03431060&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00060&siteStatus=all".format(year, month, day, year, month, day)
+mcreek_fdata = json.loads(requests.get(mcreek_furl).text)
+mcreek_fdata = mcreek_fdata['value']['timeSeries'][0]['values'][0]['value']
+mcreek_fdf = pd.DataFrame.from_dict(mcreek_fdata)
+
+```
+
+
+```{python}
+
+mcreek_fdf['value'] = mcreek_fdf['value'].astype(str).astype(float)
+mcreek_flow = mcreek_fdf['value'].sum() / 5
+print(mcreek_flow)
+
+```
+
+
+```{python}
+
+mbridge_flow = hwy100_flow
+print(mbridge_flow)
+
+```
+
+
+```{python}
+
+rcreek_flow = jblvd_flow
+print(rcreek_flow)
+
+```
+
+
+```{python}
+
+wpark_flow = mcreek_flow
+print(wpark_flow)
+
+```
+
+
+```{python}
+
+flow_list = [hwy100_flow, hwy70_flow, jblvd_flow, lpike_flow, mcreek_flow, mbridge_flow, rcreek_flow, wpark_flow]
+
+```
+
+Gage Height
+
+```{python}
+
+jblvd_gurl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03431700&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00065&siteStatus=all".format(year, month, day, year, month, day)
+jblvd_gdata = json.loads(requests.get(jblvd_gurl).text)
+jblvd_gdata = jblvd_gdata['value']['timeSeries'][0]['values'][0]['value']
+jblvd_gdf = pd.DataFrame.from_dict(jblvd_gdata)
+
+```
+
+
+```{python}
+
+jblvd_gdf['value'] = jblvd_gdf['value'].astype(str).astype(float)
+
+jblvd_gage = jblvd_gdf['value'].sum() / 5
+print(jblvd_gage)
+
+```
+
+
+```{python}
+
+hwy100_gurl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03433500&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00065&siteStatus=all".format(year, month, day, year, month, day)
+hwy100_gdata = json.loads(requests.get(hwy100_gurl).text)
+hwy100_gdata = hwy100_gdata['value']['timeSeries'][0]['values'][0]['value']
+hwy100_gdf = pd.DataFrame.from_dict(hwy100_gdata)
+
+```
+
+
+```{python}
+
+hwy100_gdf['value'] = hwy100_gdf['value'].astype(str).astype(float)
+hwy100_gage = hwy100_gdf['value'].sum() / 5
+print(hwy100_gage)
+
+```
+
+
+```{python}
+
+hwy70_gurl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03434500&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00065&siteStatus=all".format(year, month, day, year, month, day)
+hwy70_gdata = json.loads(requests.get(hwy70_gurl).text)
+hwy70_gdata = hwy70_gdata['value']['timeSeries'][0]['values'][0]['value']
+hwy70_gdf = pd.DataFrame.from_dict(hwy70_gdata)
+
+```
+
+
+```{python}
+
+hwy70_gdf['value'] = hwy70_gdf['value'].astype(str).astype(float)
+hwy70_gage = hwy70_gdf['value'].sum() / 3
+print(hwy70_gage)
+
+```
+
+
+```{python}
+
+lpike_gurl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03432350&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00065&siteStatus=all".format(year, month, day, year, month, day)
+lpike_gdata = json.loads(requests.get(lpike_gurl).text)
+lpike_gdata = lpike_gdata['value']['timeSeries'][0]['values'][0]['value']
+lpike_gdf = pd.DataFrame.from_dict(lpike_gdata)
+
+```
+
+
+```{python}
+
+lpike_gdf['value'] = lpike_gdf['value'].astype(str).astype(float)
+lpike_gage = lpike_gdf['value'].sum() / 5
+print(lpike_gage)
+
+```
+
+
+```{python}
+
+mcreek_gurl = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03431060&startDT={}-{}-{}T05:00-0500&endDT={}-{}-{}T06:00-0500&parameterCd=00065&siteStatus=all".format(year, month, day, year, month, day)
+mcreek_gdata = json.loads(requests.get(mcreek_gurl).text)
+mcreek_gdata = mcreek_gdata['value']['timeSeries'][0]['values'][0]['value']
+mcreek_gdf = pd.DataFrame.from_dict(mcreek_gdata)
+
+```
+
+
+
+```{python}
+
+mcreek_gdf['value'] = mcreek_gdf['value'].astype(str).astype(float)
+mcreek_gage = mcreek_gdf['value'].sum() / 5
+print(mcreek_gage)
+
+```
+
+
+```{python}
+
+mbridge_gage = hwy100_gage
+print(mbridge_gage)
+
+```
+
+
+```{python}
+
+rcreek_gage = jblvd_gage
+print(rcreek_gage)
+
+```
+
+
+```{python}
+wpark_gage = mcreek_gage
+print(rcreek_gage)
+
+
+```
+
+
+```{python}
+
+gage_list = [hwy100_gage, hwy70_gage, jblvd_gage, lpike_gage, mcreek_gage, mbridge_gage, rcreek_gage, wpark_gage]
+
+```
+
+Creating a DataFrame of Forecast Values
+
+```{python}
+
+column_names = ['temp', 'onedayprcp', 'twodayprcp', 'threedayprcp', 'fivedayprcp', 'weekprcp', 'flow', 'gage', 'sin(dayofyear)']
+
+```
+
+
+```{python}
+
+index_names = ['Hwy100', 'Hwy70', 'JBlvd', 'LPike', 'MCreek', 'MBridge', 'RCreek', 'WPark']
+
+```
+
+
+```{python}
+
+forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list, threedayprcp_list, fivedayprcp_list, weekprcp_list, flow_list, gage_list, sindoy_list)), index = index_names, columns = column_names)
+
+```
+
+
+```{python}
+
+forecast_df
+
+```
+
+
+```{python}
+
+#forecast_df.to_csv('Forecast_Data.csv', encoding = 'utf-8-sig')
+
+
+```
+
+
+```{r warning=FALSE, map}
+
+p<-leaflet() %>% 
+  addTiles() %>% 
+  #addProviderTiles(providers$OpenStreetMap, group = 'Open SM')  %>%
+  #addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
+  addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
+  setView(lng = -86.791425, lat = 36.08, zoom = 10)
+
+p
+
+```
+
+
+```{r warning=FALSE, mapsave, include=FALSE}
+#widget_file_size <- function(p) {
+#  d <- tempdir()
+#  withr::with_dir(d, htmlwidgets::saveWidget(p, "map.html"))
+#  f <- file.path(d, "map.html")
+#  mb <- round(file.info(f)$size / 1e6, 3)
+#  message("File is: ", mb," MB")
+#}
+#widget_file_size(p)
+
+#widget_file_size(partial_bundle(p))
+
+
+
+
+saveWidget(frameableWidget(p), "map.html", selfcontained = T, libdir = "lib")
+
+```
+
