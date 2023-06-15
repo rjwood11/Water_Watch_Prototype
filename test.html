@@ -5463,15 +5463,17 @@ index_names = [&#39;Hwy100&#39;, &#39;Hwy70&#39;, &#39;JBlvd&#39;, &#39;LPike&#3
 <pre class="python"><code>
 forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list, threedayprcp_list, fivedayprcp_list, weekprcp_list, flow_list, gage_list, sindoy_list)), index = index_names, columns = column_names)</code></pre>
 <pre class="python"><code>forecast_df</code></pre>
-<pre><code>##          temp  onedayprcp  twodayprcp  threedayprcp  fivedayprcp  weekprcp     flow      gage  sin(dayofyear)
-## Hwy100     89         0.0         0.0           0.0         0.59      0.92   44.800  1.370000        0.345363
-## Hwy70      89         0.0         0.0           0.0         0.59      0.92  284.000  1.303333        0.345363
-## JBlvd      89         0.0         0.0           0.0         0.59      0.92    5.782  0.652000        0.345363
-## LPike      89         0.0         0.0           0.0         0.59      0.92   38.600  3.600000        0.345363
-## MCreek     89         0.0         0.0           0.0         0.59      0.92   17.760  2.916000        0.345363
-## MBridge    89         0.0         0.0           0.0         0.59      0.92   44.800  1.370000        0.345363
-## RCreek     89         0.0         0.0           0.0         0.59      0.92    5.782  0.652000        0.345363
-## WPark      89         0.0         0.0           0.0         0.59      0.92   17.760  2.916000        0.345363</code></pre>
+<pre><code>##          temp  onedayprcp  twodayprcp  ...     flow      gage  sin(dayofyear)
+## Hwy100     89         0.0         0.0  ...   44.800  1.370000        0.345363
+## Hwy70      89         0.0         0.0  ...  284.000  1.303333        0.345363
+## JBlvd      89         0.0         0.0  ...    5.782  0.652000        0.345363
+## LPike      89         0.0         0.0  ...   38.600  3.600000        0.345363
+## MCreek     89         0.0         0.0  ...   17.760  2.916000        0.345363
+## MBridge    89         0.0         0.0  ...   44.800  1.370000        0.345363
+## RCreek     89         0.0         0.0  ...    5.782  0.652000        0.345363
+## WPark      89         0.0         0.0  ...   17.760  2.916000        0.345363
+## 
+## [8 rows x 9 columns]</code></pre>
 <pre class="python"><code>
 #forecast_df.to_csv(&#39;Forecast_Data.csv&#39;, encoding = &#39;utf-8-sig&#39;)
 </code></pre>
@@ -5483,8 +5485,8 @@ forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list,
   setView(lng = -86.791425, lat = 36.08, zoom = 10)
 
 p</code></pre>
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-833ad61a165743029486" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-833ad61a165743029486">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"NG World",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"setView":[[36.08,-86.791425],10,[]]},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-541995438955550e2038" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-541995438955550e2038">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"NG World",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"setView":[[36.08,-86.791425],10,[]]},"evals":[],"jsHooks":[]}</script>
 
 
 
