@@ -35,7 +35,7 @@ body {
 }
 ```
 
-![](visuals/map.html)
+![](map.html)
 
 
 Last updated on `r today()`  
