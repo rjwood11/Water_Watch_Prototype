@@ -36,7 +36,7 @@ body {
 ```
 
 ![](visuals/map.html)
-![Cartoon Diagram](visuals/workflow_cartoon.png)
+
 
 Last updated on `r today()`  
 Site [developed](`r rmarkdown::metadata$github_repo`) by [Ryan Jackwood](mailto:`r rmarkdown::metadata$email_address`)
