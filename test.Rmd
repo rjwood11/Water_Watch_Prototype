@@ -4,6 +4,9 @@ title: "Harpeth Conservancy's E. coli Forecast"
 
 ```{r warning=FALSE, setup, include=FALSE}
 
+# MAIN script that runs Python and R - each grey "chunk" can be defined based on the type of script to be run
+# There are a number of options that can be included in the brackets at the beginning of each chunk 
+
 library(rmarkdown)
 library(reticulate)
 library(tidyverse)
@@ -16,11 +19,12 @@ Sys.which("python")
 
 use_python("C:/Users/rwjac/miniconda/python.exe")
 
-setwd("C:/Users/rwjac/Desktop/Water_Watch_Prototype")
+#setwd("C:/Users/rwjac/Desktop/Water_Watch_Prototype")
 
 ```
 
 ```{python}
+
 import pandas as pd
 import json
 import requests
