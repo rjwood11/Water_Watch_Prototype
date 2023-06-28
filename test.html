@@ -5311,9 +5311,9 @@ temp_forecast = NWSforecastdata_df[&#39;temperature&#39;][1]</code></pre>
 <pre class="python"><code>
 temp_list = [temp_forecast]*8</code></pre>
 <pre class="python"><code>print(temp_forecast)</code></pre>
-<pre><code>## 84</code></pre>
+<pre><code>## 94</code></pre>
 <pre class="python"><code>print(temp_list)</code></pre>
-<pre><code>## [84, 84, 84, 84, 84, 84, 84, 84]</code></pre>
+<pre><code>## [94, 94, 94, 94, 94, 94, 94, 94]</code></pre>
 <p>Pulling precipitation data from USGS (currently using Highway 70
 location).</p>
 <pre class="python"><code>prcp_url = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T00:00-0500&amp;endDT={}-{}-{}T00:00-0500&amp;parameterCd=00045&amp;siteStatus=all&quot;.format(weekago_year, weekago_month, weekago_day, year, month, day)
@@ -5335,7 +5335,7 @@ fivedayprcp_total = fivedayprcp_df[&#39;value&#39;].sum()
 weekprcp_total = USGS_prcpdf[&#39;value&#39;].sum()
 </code></pre>
 <pre class="python"><code>print(onedayprcp_total, twodayprcp_total, threedayprcp_total, fivedayprcp_total, weekprcp_total)</code></pre>
-<pre><code>## 0.0 0.0 0.0 0.39999999999999997 0.8</code></pre>
+<pre><code>## 0.0 0.0 0.0 0.0 0.7000000000000001</code></pre>
 <pre class="python"><code>onedayprcp_list = [onedayprcp_total]*8
 twodayprcp_list = [twodayprcp_total]*8
 threedayprcp_list = [threedayprcp_total]*8
@@ -5352,7 +5352,7 @@ jblvd_fdf = pd.DataFrame.from_dict(jblvd_fdata)</code></pre>
 
 jblvd_flow = jblvd_fdf[&#39;value&#39;].sum() / 5
 print(jblvd_flow)</code></pre>
-<pre><code>## 11.5</code></pre>
+<pre><code>## 4.784000000000001</code></pre>
 <pre class="python"><code>
 hwy100_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03433500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy100_fdata = json.loads(requests.get(hwy100_furl).text)
@@ -5361,7 +5361,7 @@ hwy100_fdf = pd.DataFrame.from_dict(hwy100_fdata)</code></pre>
 <pre class="python"><code>hwy100_fdf[&#39;value&#39;] = hwy100_fdf[&#39;value&#39;].astype(str).astype(float)
 hwy100_flow = hwy100_fdf[&#39;value&#39;].sum() / 5
 print(hwy100_flow)</code></pre>
-<pre><code>## 203.2</code></pre>
+<pre><code>## 46.4</code></pre>
 <pre class="python"><code>
 hwy70_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy70_fdata = json.loads(requests.get(hwy70_furl).text)
@@ -5370,7 +5370,7 @@ hwy70_fdf = pd.DataFrame.from_dict(hwy70_fdata)</code></pre>
 <pre class="python"><code>hwy70_fdf[&#39;value&#39;] = hwy70_fdf[&#39;value&#39;].astype(str).astype(float)
 hwy70_flow = hwy70_fdf[&#39;value&#39;].sum() / 3
 print(hwy70_flow)</code></pre>
-<pre><code>## 484.6666666666667</code></pre>
+<pre><code>## 267.0</code></pre>
 <pre class="python"><code>lpike_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03432350&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 lpike_fdata = json.loads(requests.get(lpike_furl).text)
 lpike_fdata = lpike_fdata[&#39;value&#39;][&#39;timeSeries&#39;][0][&#39;values&#39;][0][&#39;value&#39;]
@@ -5379,7 +5379,7 @@ lpike_fdf = pd.DataFrame.from_dict(lpike_fdata)
 <pre class="python"><code>lpike_fdf[&#39;value&#39;] = lpike_fdf[&#39;value&#39;].astype(str).astype(float)
 lpike_flow = lpike_fdf[&#39;value&#39;].sum() / 5
 print(lpike_flow)</code></pre>
-<pre><code>## 151.0</code></pre>
+<pre><code>## 48.7</code></pre>
 <pre class="python"><code>
 mcreek_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03431060&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 mcreek_fdata = json.loads(requests.get(mcreek_furl).text)
@@ -5388,16 +5388,16 @@ mcreek_fdf = pd.DataFrame.from_dict(mcreek_fdata)</code></pre>
 <pre class="python"><code>mcreek_fdf[&#39;value&#39;] = mcreek_fdf[&#39;value&#39;].astype(str).astype(float)
 mcreek_flow = mcreek_fdf[&#39;value&#39;].sum() / 5
 print(mcreek_flow)</code></pre>
-<pre><code>## 50.38</code></pre>
+<pre><code>## 16.419999999999998</code></pre>
 <pre class="python"><code>mbridge_flow = hwy100_flow
 print(mbridge_flow)</code></pre>
-<pre><code>## 203.2</code></pre>
+<pre><code>## 46.4</code></pre>
 <pre class="python"><code>rcreek_flow = jblvd_flow
 print(rcreek_flow)</code></pre>
-<pre><code>## 11.5</code></pre>
+<pre><code>## 4.784000000000001</code></pre>
 <pre class="python"><code>wpark_flow = mcreek_flow
 print(wpark_flow)</code></pre>
-<pre><code>## 50.38</code></pre>
+<pre><code>## 16.419999999999998</code></pre>
 <pre class="python"><code>
 flow_list = [hwy100_flow, hwy70_flow, jblvd_flow, lpike_flow, mcreek_flow, mbridge_flow, rcreek_flow, wpark_flow]</code></pre>
 <p>Gage Height</p>
@@ -5410,7 +5410,7 @@ jblvd_gdf = pd.DataFrame.from_dict(jblvd_gdata)</code></pre>
 
 jblvd_gage = jblvd_gdf[&#39;value&#39;].sum() / 5
 print(jblvd_gage)</code></pre>
-<pre><code>## 0.76</code></pre>
+<pre><code>## 0.626</code></pre>
 <pre class="python"><code>
 hwy100_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03433500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy100_gdata = json.loads(requests.get(hwy100_gurl).text)
@@ -5419,7 +5419,7 @@ hwy100_gdf = pd.DataFrame.from_dict(hwy100_gdata)</code></pre>
 <pre class="python"><code>hwy100_gdf[&#39;value&#39;] = hwy100_gdf[&#39;value&#39;].astype(str).astype(float)
 hwy100_gage = hwy100_gdf[&#39;value&#39;].sum() / 5
 print(hwy100_gage)</code></pre>
-<pre><code>## 1.9100000000000001</code></pre>
+<pre><code>## 1.378</code></pre>
 <pre class="python"><code>
 hwy70_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy70_gdata = json.loads(requests.get(hwy70_gurl).text)
@@ -5428,7 +5428,7 @@ hwy70_gdf = pd.DataFrame.from_dict(hwy70_gdata)</code></pre>
 <pre class="python"><code>hwy70_gdf[&#39;value&#39;] = hwy70_gdf[&#39;value&#39;].astype(str).astype(float)
 hwy70_gage = hwy70_gdf[&#39;value&#39;].sum() / 3
 print(hwy70_gage)</code></pre>
-<pre><code>## 1.866666666666667</code></pre>
+<pre><code>## 1.25</code></pre>
 <pre class="python"><code>
 lpike_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03432350&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 lpike_gdata = json.loads(requests.get(lpike_gurl).text)
@@ -5437,7 +5437,7 @@ lpike_gdf = pd.DataFrame.from_dict(lpike_gdata)</code></pre>
 <pre class="python"><code>lpike_gdf[&#39;value&#39;] = lpike_gdf[&#39;value&#39;].astype(str).astype(float)
 lpike_gage = lpike_gdf[&#39;value&#39;].sum() / 5
 print(lpike_gage)</code></pre>
-<pre><code>## 4.4</code></pre>
+<pre><code>## 3.71</code></pre>
 <pre class="python"><code>
 mcreek_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03431060&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 mcreek_gdata = json.loads(requests.get(mcreek_gurl).text)
@@ -5446,16 +5446,16 @@ mcreek_gdf = pd.DataFrame.from_dict(mcreek_gdata)</code></pre>
 <pre class="python"><code>mcreek_gdf[&#39;value&#39;] = mcreek_gdf[&#39;value&#39;].astype(str).astype(float)
 mcreek_gage = mcreek_gdf[&#39;value&#39;].sum() / 5
 print(mcreek_gage)</code></pre>
-<pre><code>## 2.814</code></pre>
+<pre><code>## 2.4539999999999997</code></pre>
 <pre class="python"><code>mbridge_gage = hwy100_gage
 print(mbridge_gage)</code></pre>
-<pre><code>## 1.9100000000000001</code></pre>
+<pre><code>## 1.378</code></pre>
 <pre class="python"><code>rcreek_gage = jblvd_gage
 print(rcreek_gage)</code></pre>
-<pre><code>## 0.76</code></pre>
+<pre><code>## 0.626</code></pre>
 <pre class="python"><code>wpark_gage = mcreek_gage
 print(rcreek_gage)</code></pre>
-<pre><code>## 0.76</code></pre>
+<pre><code>## 0.626</code></pre>
 <pre class="python"><code>
 gage_list = [hwy100_gage, hwy70_gage, jblvd_gage, lpike_gage, mcreek_gage, mbridge_gage, rcreek_gage, wpark_gage]</code></pre>
 <p>Creating a DataFrame of Forecast Values</p>
@@ -5466,15 +5466,15 @@ index_names = [&#39;Hwy100&#39;, &#39;Hwy70&#39;, &#39;JBlvd&#39;, &#39;LPike&#3
 <pre class="python"><code>
 forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list, threedayprcp_list, fivedayprcp_list, weekprcp_list, flow_list, gage_list, sindoy_list)), index = index_names, columns = column_names)</code></pre>
 <pre class="python"><code>forecast_df</code></pre>
-<pre><code>##          temp  onedayprcp  twodayprcp  ...        flow      gage  sin(dayofyear)
-## Hwy100     84         0.0         0.0  ...  203.200000  1.910000        0.213261
-## Hwy70      84         0.0         0.0  ...  484.666667  1.866667        0.213261
-## JBlvd      84         0.0         0.0  ...   11.500000  0.760000        0.213261
-## LPike      84         0.0         0.0  ...  151.000000  4.400000        0.213261
-## MCreek     84         0.0         0.0  ...   50.380000  2.814000        0.213261
-## MBridge    84         0.0         0.0  ...  203.200000  1.910000        0.213261
-## RCreek     84         0.0         0.0  ...   11.500000  0.760000        0.213261
-## WPark      84         0.0         0.0  ...   50.380000  2.814000        0.213261
+<pre><code>##          temp  onedayprcp  twodayprcp  ...     flow   gage  sin(dayofyear)
+## Hwy100     94         0.0         0.0  ...   46.400  1.378        0.128485
+## Hwy70      94         0.0         0.0  ...  267.000  1.250        0.128485
+## JBlvd      94         0.0         0.0  ...    4.784  0.626        0.128485
+## LPike      94         0.0         0.0  ...   48.700  3.710        0.128485
+## MCreek     94         0.0         0.0  ...   16.420  2.454        0.128485
+## MBridge    94         0.0         0.0  ...   46.400  1.378        0.128485
+## RCreek     94         0.0         0.0  ...    4.784  0.626        0.128485
+## WPark      94         0.0         0.0  ...   16.420  2.454        0.128485
 ## 
 ## [8 rows x 9 columns]</code></pre>
 <pre class="python"><code>
@@ -5488,8 +5488,8 @@ forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list,
   setView(lng = -86.791425, lat = 36.08, zoom = 10)
 
 p</code></pre>
-<div id="htmlwidget-95844382edb9337ffab3" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-95844382edb9337ffab3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addProviderTiles","args":["Stamen.Toner",null,"Toner",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"setView":[[36.08,-86.791425],10,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-636f975ed74f6df5fe84" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-636f975ed74f6df5fe84">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addProviderTiles","args":["Stamen.Toner",null,"Toner",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]}],"setView":[[36.08,-86.791425],10,[]]},"evals":[],"jsHooks":[]}</script>
 
 
 
