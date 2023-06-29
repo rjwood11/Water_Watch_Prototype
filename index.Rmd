@@ -1,17 +1,10 @@
 ---
-title: "Water Watch Test"
-author: "Ryan Jackwood"
-output:
-  html_document: default
-  pdf_document: default
+title: Water Watch Test
+author: Ryan Jackwood
+output: html_document
 email_address: ryanjackwood@harpethriver.org
 github_repo: https://github.com/rjwood11/Water_Watch_Prototype
 ---
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-
 
 ```{r echo = FALSE, message = FALSE}
 
@@ -20,7 +13,7 @@ github_repo: https://github.com/rjwood11/Water_Watch_Prototype
 
 
 library(lubridate)
-library(tidyverse)
+
 ```
 
 ```{css echo = FALSE}
@@ -33,27 +26,14 @@ library(tidyverse)
 }
 
 body {
-  background-color: black;
-  color: #f5f5f5;
+  background-color: white;
+  color: black;
   font-size: 1.2vw;
-  font-family: "Montserrat", sans-serif;
 }
 ```
 
-Isn't this map GREAT!? I think it is pretty cool
-
-![](map.html)
+<iframe src="map.html" height="600px" width="100%" style="border:none;"></iframe>
 
 
 Last updated on `r today()`  
 Site [developed](`r rmarkdown::metadata$github_repo`) by [Ryan Jackwood](mailto:`r rmarkdown::metadata$email_address`)
-
-```{r echo = FALSE, message = FALSE}
-
-
-
-
-```
-
-
-<p style="color: black">`r now()`</p>
