@@ -16,7 +16,7 @@ library(leaflet.extras)
 
 Sys.which("python")
 
-use_python("C:/Users/rwjac/miniconda3/python.exe")
+use_python("C:/Users/rwjac/miniconda/python.exe")
 
 
 ```
