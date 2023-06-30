@@ -514,11 +514,12 @@ Hwy100_pred <- 207.2+0.06577*(forecast_df["Hwy100","flow"]*forecast_df["Hwy100",
 
 #Hwy70 Model - Ecoli = -592.2 + 0.1694*(PROD(Flow,prev_two_rainfall)) + 1.973e+04*(INVERSE(SUM(sinDOY,TAVG),6.2684246))
 #THIS MODEL IS CURRENTLY WRONG!!
-Hwy70_pred <- -592.2 + 0.1694*(forecast_df["Hwy70","flow"]*forecast_df["Hwy70","twodayprcp"]) + 1.973e+04*(1/(forecast_df["Hwy70","sin(dayofyear)"] + forecast_df["Hwy70","temp"]))+500
+
+Hwy70_pred <- NA
 
 #JBlvd Model - Ecoli = -312.7 + 136*(SQUAREROOT(rainfall)) + 2.146e+04*(INVERSE(TMAX,8.35)) + 144.8*(INVERSE(PROD(sinDOY,TAVG),-1.2868741))
 
-JBlvd_pred <- -312.7+ 136 * sqrt(forecast_df["JBlvd","onedayprcp"]) + forecast_df["JBlvd","temp"]+2000
+JBlvd_pred <- NA
 
 #LPike Model - Ecoli = 294.9 - 115.9*(sinDOY) + 3.068e-05*(SQUARE(PROD(Flow,prev_two_rainfall)))
 
