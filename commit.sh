@@ -1,4 +1,5 @@
 #!/bin/sh
+
 cd C:/Users/rwjac/Desktop/Water_Watch_Prototype
 git add --all
 timestamp() {
