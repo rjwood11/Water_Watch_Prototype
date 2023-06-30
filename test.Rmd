@@ -552,9 +552,9 @@ forecast_df$Ecoli_pred <- round(c(Hwy100_pred, Hwy70_pred, JBlvd_pred, LPike_pre
 forecast_df2 = forecast_df
 
 forecast_df$status[forecast_df2$Ecoli_pred < 235] <- "Safe"
-forecast_df$status[forecast_df2$Ecoli_pred >= 235 & forecast_df2$Ecoli_pred < 350] <- "Caution"
-forecast_df$status[forecast_df2$Ecoli_pred >= 350 & forecast_df2$Ecoli_pred < 750] <- "Warning"
-forecast_df$status[forecast_df2$Ecoli_pred >= 750] <- "Danger"
+forecast_df$status[forecast_df2$Ecoli_pred >= 235 & forecast_df2$Ecoli_pred < 350] <- "Advisory"
+forecast_df$status[forecast_df2$Ecoli_pred >= 350 & forecast_df2$Ecoli_pred < 750] <- "Caution"
+forecast_df$status[forecast_df2$Ecoli_pred >= 750] <- "Warning"
 
 forecast_df$status[is.na(forecast_df$Ecoli_pred)] = NA
 
