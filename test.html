@@ -5777,9 +5777,9 @@ temp_forecast = NWSforecastdata_df[&#39;temperature&#39;][1]</code></pre>
 <pre class="python"><code>
 temp_list = [temp_forecast]*8</code></pre>
 <pre class="python"><code>print(temp_forecast)</code></pre>
-<pre><code>## 70</code></pre>
+<pre><code>## 98</code></pre>
 <pre class="python"><code>print(temp_list)</code></pre>
-<pre><code>## [70, 70, 70, 70, 70, 70, 70, 70]</code></pre>
+<pre><code>## [98, 98, 98, 98, 98, 98, 98, 98]</code></pre>
 <p>Pulling precipitation data from USGS (currently using Highway 70
 location).</p>
 <pre class="python"><code>prcp_url = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T00:00-0500&amp;endDT={}-{}-{}T00:00-0500&amp;parameterCd=00045&amp;siteStatus=all&quot;.format(weekago_year, weekago_month, weekago_day, year, month, day)
@@ -5818,7 +5818,7 @@ jblvd_fdf = pd.DataFrame.from_dict(jblvd_fdata)</code></pre>
 
 jblvd_flow = jblvd_fdf[&#39;value&#39;].sum() / 5
 print(jblvd_flow)</code></pre>
-<pre><code>## 18.6</code></pre>
+<pre><code>## 23.02</code></pre>
 <pre class="python"><code>
 hwy100_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03433500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy100_fdata = json.loads(requests.get(hwy100_furl).text)
@@ -5827,7 +5827,7 @@ hwy100_fdf = pd.DataFrame.from_dict(hwy100_fdata)</code></pre>
 <pre class="python"><code>hwy100_fdf[&#39;value&#39;] = hwy100_fdf[&#39;value&#39;].astype(str).astype(float)
 hwy100_flow = hwy100_fdf[&#39;value&#39;].sum() / 5
 print(hwy100_flow)</code></pre>
-<pre><code>## 92.4</code></pre>
+<pre><code>## 152.0</code></pre>
 <pre class="python"><code>
 hwy70_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy70_fdata = json.loads(requests.get(hwy70_furl).text)
@@ -5836,7 +5836,7 @@ hwy70_fdf = pd.DataFrame.from_dict(hwy70_fdata)</code></pre>
 <pre class="python"><code>hwy70_fdf[&#39;value&#39;] = hwy70_fdf[&#39;value&#39;].astype(str).astype(float)
 hwy70_flow = hwy70_fdf[&#39;value&#39;].sum() / 3
 print(hwy70_flow)</code></pre>
-<pre><code>## 141.66666666666666</code></pre>
+<pre><code>## 423.6666666666667</code></pre>
 <pre class="python"><code>lpike_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03432350&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 lpike_fdata = json.loads(requests.get(lpike_furl).text)
 lpike_fdata = lpike_fdata[&#39;value&#39;][&#39;timeSeries&#39;][0][&#39;values&#39;][0][&#39;value&#39;]
@@ -5845,7 +5845,7 @@ lpike_fdf = pd.DataFrame.from_dict(lpike_fdata)
 <pre class="python"><code>lpike_fdf[&#39;value&#39;] = lpike_fdf[&#39;value&#39;].astype(str).astype(float)
 lpike_flow = lpike_fdf[&#39;value&#39;].sum() / 5
 print(lpike_flow)</code></pre>
-<pre><code>## 26.920000000000005</code></pre>
+<pre><code>## 65.92</code></pre>
 <pre class="python"><code>
 mcreek_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03431060&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 mcreek_fdata = json.loads(requests.get(mcreek_furl).text)
@@ -5857,10 +5857,10 @@ print(mcreek_flow)</code></pre>
 <pre><code>## 107.8</code></pre>
 <pre class="python"><code>mbridge_flow = hwy100_flow
 print(mbridge_flow)</code></pre>
-<pre><code>## 92.4</code></pre>
+<pre><code>## 152.0</code></pre>
 <pre class="python"><code>rcreek_flow = jblvd_flow
 print(rcreek_flow)</code></pre>
-<pre><code>## 18.6</code></pre>
+<pre><code>## 23.02</code></pre>
 <pre class="python"><code>wpark_flow = mcreek_flow
 print(wpark_flow)</code></pre>
 <pre><code>## 107.8</code></pre>
@@ -5876,7 +5876,7 @@ jblvd_gdf = pd.DataFrame.from_dict(jblvd_gdata)</code></pre>
 
 jblvd_gage = jblvd_gdf[&#39;value&#39;].sum() / 5
 print(jblvd_gage)</code></pre>
-<pre><code>## 0.7300000000000001</code></pre>
+<pre><code>## 0.9100000000000001</code></pre>
 <pre class="python"><code>
 hwy100_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03433500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy100_gdata = json.loads(requests.get(hwy100_gurl).text)
@@ -5885,7 +5885,7 @@ hwy100_gdf = pd.DataFrame.from_dict(hwy100_gdata)</code></pre>
 <pre class="python"><code>hwy100_gdf[&#39;value&#39;] = hwy100_gdf[&#39;value&#39;].astype(str).astype(float)
 hwy100_gage = hwy100_gdf[&#39;value&#39;].sum() / 5
 print(hwy100_gage)</code></pre>
-<pre><code>## 1.0619999999999998</code></pre>
+<pre><code>## 1.764</code></pre>
 <pre class="python"><code>
 hwy70_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy70_gdata = json.loads(requests.get(hwy70_gurl).text)
@@ -5894,7 +5894,7 @@ hwy70_gdf = pd.DataFrame.from_dict(hwy70_gdata)</code></pre>
 <pre class="python"><code>hwy70_gdf[&#39;value&#39;] = hwy70_gdf[&#39;value&#39;].astype(str).astype(float)
 hwy70_gage = hwy70_gdf[&#39;value&#39;].sum() / 3
 print(hwy70_gage)</code></pre>
-<pre><code>## 0.57</code></pre>
+<pre><code>## 1.7066666666666668</code></pre>
 <pre class="python"><code>
 lpike_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03432350&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 lpike_gdata = json.loads(requests.get(lpike_gurl).text)
@@ -5903,7 +5903,7 @@ lpike_gdf = pd.DataFrame.from_dict(lpike_gdata)</code></pre>
 <pre class="python"><code>lpike_gdf[&#39;value&#39;] = lpike_gdf[&#39;value&#39;].astype(str).astype(float)
 lpike_gage = lpike_gdf[&#39;value&#39;].sum() / 5
 print(lpike_gage)</code></pre>
-<pre><code>## 1.55</code></pre>
+<pre><code>## 3.864</code></pre>
 <pre class="python"><code>
 mcreek_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03431060&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 mcreek_gdata = json.loads(requests.get(mcreek_gurl).text)
@@ -5915,13 +5915,13 @@ print(mcreek_gage)</code></pre>
 <pre><code>## 3.1740000000000004</code></pre>
 <pre class="python"><code>mbridge_gage = hwy100_gage
 print(mbridge_gage)</code></pre>
-<pre><code>## 1.0619999999999998</code></pre>
+<pre><code>## 1.764</code></pre>
 <pre class="python"><code>rcreek_gage = jblvd_gage
 print(rcreek_gage)</code></pre>
-<pre><code>## 0.7300000000000001</code></pre>
+<pre><code>## 0.9100000000000001</code></pre>
 <pre class="python"><code>wpark_gage = mcreek_gage
 print(rcreek_gage)</code></pre>
-<pre><code>## 0.7300000000000001</code></pre>
+<pre><code>## 0.9100000000000001</code></pre>
 <pre class="python"><code>
 gage_list = [hwy100_gage, hwy70_gage, jblvd_gage, lpike_gage, mcreek_gage, mbridge_gage, rcreek_gage, wpark_gage]</code></pre>
 <p>Creating a DataFrame of Forecast Values</p>
@@ -5932,15 +5932,15 @@ index_names = [&#39;Hwy100&#39;, &#39;Hwy70&#39;, &#39;JBlvd&#39;, &#39;LPike&#3
 <pre class="python"><code>
 forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list, threedayprcp_list, fivedayprcp_list, weekprcp_list, flow_list, gage_list, sindoy_list)), index = index_names, columns = column_names)</code></pre>
 <pre class="python"><code>forecast_df</code></pre>
-<pre><code>##          temp  onedayprcp  twodayprcp  ...        flow   gage  sin(dayofyear)
-## Hwy100     70         0.0         0.0  ...   92.400000  1.062        0.077121
-## Hwy70      70         0.0         0.0  ...  141.666667  0.570        0.077121
-## JBlvd      70         0.0         0.0  ...   18.600000  0.730        0.077121
-## LPike      70         0.0         0.0  ...   26.920000  1.550        0.077121
-## MCreek     70         0.0         0.0  ...  107.800000  3.174        0.077121
-## MBridge    70         0.0         0.0  ...   92.400000  1.062        0.077121
-## RCreek     70         0.0         0.0  ...   18.600000  0.730        0.077121
-## WPark      70         0.0         0.0  ...  107.800000  3.174        0.077121
+<pre><code>##          temp  onedayprcp  twodayprcp  ...        flow      gage  sin(dayofyear)
+## Hwy100     98         0.0         0.0  ...  152.000000  1.764000        0.077121
+## Hwy70      98         0.0         0.0  ...  423.666667  1.706667        0.077121
+## JBlvd      98         0.0         0.0  ...   23.020000  0.910000        0.077121
+## LPike      98         0.0         0.0  ...   65.920000  3.864000        0.077121
+## MCreek     98         0.0         0.0  ...  107.800000  3.174000        0.077121
+## MBridge    98         0.0         0.0  ...  152.000000  1.764000        0.077121
+## RCreek     98         0.0         0.0  ...   23.020000  0.910000        0.077121
+## WPark      98         0.0         0.0  ...  107.800000  3.174000        0.077121
 ## 
 ## [8 rows x 9 columns]</code></pre>
 <pre class="python"><code>
@@ -6051,8 +6051,8 @@ p&lt;-leaflet() %&gt;%
 
 
 p</code></pre>
-<div id="htmlwidget-1a99100acb68933b89af" style="width:672px;height:480px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-1a99100acb68933b89af">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addProviderTiles","args":["OpenStreetMap",null,"Open SM",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Stamen.Toner",null,"Toner",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"NG World",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[36.054361,36.123611,36.112694,35.909389,36.01725,36.017167,36.13225,36.118361],[-86.928806,-87.098944,-86.8625,-86.855806,-86.68625,-86.900139,-86.848667,-86.724333],10,null,null,{"interactive":true,"className":"","stroke":true,"color":["#00FF00","grey","grey","#FFFF00","#FFA500","#00FF00","#FF0000","#FFA500"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#00FF00","grey","grey","#FFFF00","#FFA500","#00FF00","#FF0000","#FFA500"],"fillOpacity":1},null,null,["<b>Location: <\/b> Highway 100 Boat Launch <br/> <b>E. coli:<\/b> 202 <br/> <b>Status:<\/b> Safe <br/>","<b>Location: <\/b> Hwy 70 Boat Launch <br/> <b>E. coli:<\/b> NA <br/> <b>Status:<\/b> NA <br/>","<b>Location: <\/b> Jackson Blvd <br/> <b>E. coli:<\/b> NA <br/> <b>Status:<\/b> NA <br/>","<b>Location: <\/b> Lewisburg Pike <br/> <b>E. coli:<\/b> 286 <br/> <b>Status:<\/b> Advisory <br/>","<b>Location: <\/b> Mill Creek Greenway <br/> <b>E. coli:<\/b> 628 <br/> <b>Status:<\/b> Caution <br/>","<b>Location: <\/b> Moran Road Bridge <br/> <b>E. coli:<\/b> 201 <br/> <b>Status:<\/b> Safe <br/>","<b>Location: <\/b> Richland Creek Greenway <br/> <b>E. coli:<\/b> 889 <br/> <b>Status:<\/b> Warning <br/>","<b>Location: <\/b> Whitsett Park <br/> <b>E. coli:<\/b> 690 <br/> <b>Status:<\/b> Caution <br/>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["green","yellow","orange","red","gray"],"labels":["Safe","Advisory","Caution","Warning","Data Unavailable"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"unknown","title":"Public Safety Status","extra":null,"layerId":null,"className":"info legend","group":null}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addLayersControl","args":[["Open SM","Toner","NG World"],[],{"collapsed":false,"autoZIndex":true,"position":"bottomleft"}]}],"setView":[[36.08,-86.791425],10,[]],"limits":{"lat":[35.909389,36.13225],"lng":[-87.098944,-86.68625]}},"evals":["calls.6.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (function(el, x){ var map = this; map._initialCenter = map.getCenter(); map._initialZoom = map.getZoom();}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<div id="htmlwidget-9acbd4d7378fcd2b0c38" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9acbd4d7378fcd2b0c38">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addProviderTiles","args":["OpenStreetMap",null,"Open SM",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Stamen.Toner",null,"Toner",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"NG World",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[36.054361,36.123611,36.112694,35.909389,36.01725,36.017167,36.13225,36.118361],[-86.928806,-87.098944,-86.8625,-86.855806,-86.68625,-86.900139,-86.848667,-86.724333],10,null,null,{"interactive":true,"className":"","stroke":true,"color":["#00FF00","grey","grey","#FFFF00","#FFA500","#FFFF00","#FF0000","#FFA500"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#00FF00","grey","grey","#FFFF00","#FFA500","#FFFF00","#FF0000","#FFA500"],"fillOpacity":1},null,null,["<b>Location: <\/b> Highway 100 Boat Launch <br/> <b>E. coli:<\/b> 199 <br/> <b>Status:<\/b> Safe <br/>","<b>Location: <\/b> Hwy 70 Boat Launch <br/> <b>E. coli:<\/b> NA <br/> <b>Status:<\/b> NA <br/>","<b>Location: <\/b> Jackson Blvd <br/> <b>E. coli:<\/b> NA <br/> <b>Status:<\/b> NA <br/>","<b>Location: <\/b> Lewisburg Pike <br/> <b>E. coli:<\/b> 286 <br/> <b>Status:<\/b> Advisory <br/>","<b>Location: <\/b> Mill Creek Greenway <br/> <b>E. coli:<\/b> 628 <br/> <b>Status:<\/b> Caution <br/>","<b>Location: <\/b> Moran Road Bridge <br/> <b>E. coli:<\/b> 300 <br/> <b>Status:<\/b> Advisory <br/>","<b>Location: <\/b> Richland Creek Greenway <br/> <b>E. coli:<\/b> 968 <br/> <b>Status:<\/b> Warning <br/>","<b>Location: <\/b> Whitsett Park <br/> <b>E. coli:<\/b> 690 <br/> <b>Status:<\/b> Caution <br/>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["green","yellow","orange","red","gray"],"labels":["Safe","Advisory","Caution","Warning","Data Unavailable"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"unknown","title":"Public Safety Status","extra":null,"layerId":null,"className":"info legend","group":null}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addLayersControl","args":[["Open SM","Toner","NG World"],[],{"collapsed":false,"autoZIndex":true,"position":"bottomleft"}]}],"setView":[[36.08,-86.791425],10,[]],"limits":{"lat":[35.909389,36.13225],"lng":[-87.098944,-86.68625]}},"evals":["calls.6.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (function(el, x){ var map = this; map._initialCenter = map.getCenter(); map._initialZoom = map.getZoom();}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 
 
 
