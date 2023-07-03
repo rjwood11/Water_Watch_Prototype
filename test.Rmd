@@ -4,7 +4,7 @@ title: "Harpeth Conservancy's E. coli Forecast"
 
 ```{r warning=FALSE, setup, include=FALSE}
 
-
+library(geojsonio)
 library(rmarkdown)
 library(reticulate)
 library(tidyverse)
@@ -563,9 +563,39 @@ forecast_df$status[is.na(forecast_df$Ecoli_pred)] = NA
 
 ```{r warning=FALSE, map}
 
+file_path <- "./Rivers.geojson"
+
+lads <- geojsonio::geojson_read(
+  x = file_path,  # the same file_path as above
+  what = "sp"  # returns the read with spatial class
+)
+
+
+#List of USGS Gauge stations by sampling location
+
+#Harpeth Hwy100 - "https://waterdata.usgs.gov/monitoring-location/03433500/#parameterCode=00060&period=P7D"
+#Harpeth Hwy70 - "https://waterdata.usgs.gov/monitoring-location/03434500/#parameterCode=00060&period=P7D"
+#Richland Creek, Jackson - "https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D"
+#Harpeth Lewisburg Pike - "https://waterdata.usgs.gov/monitoring-location/03432350/#parameterCode=00060&period=P7D"
+#Mill Creek Grnwy - "https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D"
+#Harpeth Moran Rd - "https://waterdata.usgs.gov/monitoring-location/03432400/#parameterCode=00060&period=P7D"
+#Richland Creek Grnwy - "https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D"
+#Mill Creek, Whitsett - "https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D"
+
+url<- c("https://waterdata.usgs.gov/monitoring-location/03433500/#parameterCode=00060&period=P7D", "https://waterdata.usgs.gov/monitoring-location/03434500/#parameterCode=00060&period=P7D",
+        "https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D", "https://waterdata.usgs.gov/monitoring-location/03432350/#parameterCode=00060&period=P7D",
+        "https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D", "https://waterdata.usgs.gov/monitoring-location/03432400/#parameterCode=00060&period=P7D",
+        "https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D", "https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D")
+
+
+
 forecast_df %<>% 
   st_as_sf(coords = c("Longitude", "Latitude")) %>% 
   st_sf(crs = 84)
+
+# turn the url to HTML anchor tag
+forecast_df <- forecast_df %>% 
+  mutate(tag = paste0("<a href=", url,">", url, "</a>"))
 
 forecast_df<-forecast_df %>% 
   mutate(popup = paste("<b>Location: </b>", forecast_df$location, 
@@ -573,6 +603,8 @@ forecast_df<-forecast_df %>%
                        "<b>E. coli:</b>", forecast_df$Ecoli_pred,
                        "<br/>",
                        "<b>Status:</b>", forecast_df$status,
+                       "<br/>",
+                       "<b>USGS Station:</b>", forecast_df$tag,
                        "<br/>"))
 
 
@@ -585,7 +617,16 @@ p<-leaflet() %>%
   addProviderTiles(providers$OpenStreetMap, group = 'Open SM')  %>%
   addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
-  setView(lng = -86.791425, lat = 36.08, zoom = 10) %>% 
+  setView(lng = -86.791425, lat = 36.08, zoom = 10) %>%
+  addPolylines(
+    data = lads,  # LAD polygon data from geojson
+    weight = 1.5,  # line thickness
+    opacity = 1,  # line transparency
+    color = "blue",  # line colour
+    fillColor = "blue",
+    label = lads$Name,
+    group = "Rivers"
+  ) %>%
   addCircleMarkers(data = forecast_df ,popup = ~popup, color=~cfac(forecast_df$status),fill=T, stroke=T, fillOpacity = 1.0) %>%
   addLegend("topright", 
             colors = c("green",  "yellow", "orange", "red", "gray"),
