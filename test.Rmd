@@ -138,7 +138,11 @@ print(temp_list)
 Pulling precipitation data from USGS (currently using Highway 70 location).
 
 ```{python}
+
+
 prcp_url = "https://waterservices.usgs.gov/nwis/iv/?format=json&sites=03434500&startDT={}-{}-{}T00:00-0500&endDT={}-{}-{}T00:00-0500&parameterCd=00045&siteStatus=all".format(weekago_year, weekago_month, weekago_day, year, month, day)
+
+
 USGS_prcpdata = json.loads(requests.get(prcp_url).text)
 USGS_prcpdata = USGS_prcpdata['value']['timeSeries'][0]['values'][0]['value']
 USGS_prcpdf = pd.DataFrame.from_dict(USGS_prcpdata)
@@ -563,13 +567,6 @@ forecast_df$status[is.na(forecast_df$Ecoli_pred)] = NA
 
 ```{r warning=FALSE, map}
 
-#file_path <- "./Rivers.geojson"
-
-#lads <- geojsonio::geojson_read(
-#  x = file_path,  # the same file_path as above
-#  what = "sp"  # returns the read with spatial class
-#)
-
 
 #List of USGS Gauge stations by sampling location
 
@@ -618,15 +615,6 @@ p<-leaflet() %>%
   addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
   setView(lng = -86.791425, lat = 36.08, zoom = 10) %>%
-  #addPolylines(
-  #  data = lads,  # LAD polygon data from geojson
-  #  weight = 1.5,  # line thickness
-  #  opacity = 1,  # line transparency
-  #  color = "blue",  # line colour
-  #  fillColor = "blue",
-  #  label = lads$Name,
-  #  group = "Rivers"
-  #) %>%
   addCircleMarkers(data = forecast_df ,popup = ~popup, color=~cfac(forecast_df$status),fill=T, stroke=T, fillOpacity = 1.0) %>%
   addLegend("topright", 
             colors = c("green",  "yellow", "orange", "red", "gray"),
