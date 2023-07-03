@@ -4,7 +4,6 @@ title: "Harpeth Conservancy's E. coli Forecast"
 
 ```{r warning=FALSE, setup, include=FALSE}
 
-setwd("C:/Users/rwjac/Desktop/Water_Watch_Prototype")
 
 #library(geojsonio)
 library(rmarkdown)
