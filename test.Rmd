@@ -601,7 +601,7 @@ p<-leaflet() %>%
     position = "bottomleft",
     baseGroups = c("Open SM","Toner","NG World"),
     # Choose to permanently display or collapse layers control switch
-    options = layersControlOptions(collapsed = FALSE)
+    options = layersControlOptions(collapsed = TRUE)
     )  
 
 
