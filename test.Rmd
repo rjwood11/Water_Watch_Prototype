@@ -6,7 +6,7 @@ title: "Harpeth Conservancy's E. coli Forecast"
 
 setwd("C:/Users/rwjac/Desktop/Water_Watch_Prototype")
 
-library(geojsonio)
+#library(geojsonio)
 library(rmarkdown)
 library(reticulate)
 library(tidyverse)
@@ -565,12 +565,12 @@ forecast_df$status[is.na(forecast_df$Ecoli_pred)] = NA
 
 ```{r warning=FALSE, map}
 
-file_path <- "./Rivers.geojson"
+#file_path <- "./Rivers.geojson"
 
-lads <- geojsonio::geojson_read(
-  x = file_path,  # the same file_path as above
-  what = "sp"  # returns the read with spatial class
-)
+#lads <- geojsonio::geojson_read(
+#  x = file_path,  # the same file_path as above
+#  what = "sp"  # returns the read with spatial class
+#)
 
 
 #List of USGS Gauge stations by sampling location
@@ -620,15 +620,15 @@ p<-leaflet() %>%
   addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
   setView(lng = -86.791425, lat = 36.08, zoom = 10) %>%
-  addPolylines(
-    data = lads,  # LAD polygon data from geojson
-    weight = 1.5,  # line thickness
-    opacity = 1,  # line transparency
-    color = "blue",  # line colour
-    fillColor = "blue",
-    label = lads$Name,
-    group = "Rivers"
-  ) %>%
+  #addPolylines(
+  #  data = lads,  # LAD polygon data from geojson
+  #  weight = 1.5,  # line thickness
+  #  opacity = 1,  # line transparency
+  #  color = "blue",  # line colour
+  #  fillColor = "blue",
+  #  label = lads$Name,
+  #  group = "Rivers"
+  #) %>%
   addCircleMarkers(data = forecast_df ,popup = ~popup, color=~cfac(forecast_df$status),fill=T, stroke=T, fillOpacity = 1.0) %>%
   addLegend("topright", 
             colors = c("green",  "yellow", "orange", "red", "gray"),
