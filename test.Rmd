@@ -535,7 +535,7 @@ MCreek_pred <- -15.33 + 5.972*(forecast_df["MCreek","flow"]+forecast_df["MCreek"
 
 #MBridge Model - Ecoli = 170.9 + 0.5829*(PROD(Flow,GH)) - 97.66*(SQUAREROOT(sinDOY))
 
-MBridge_pred <- 170.9 + 0.5829*(forecast_df["MBridge","flow"]*forecast_df["MBridge","gage"]) - 97.66*sqrt(forecast_df["MBridge","sin(dayofyear)"])
+MBridge_pred <- 170.9 + 0.5829*(forecast_df["MBridge","flow"]*forecast_df["MBridge","gage"]) - 97.66*forecast_df["MBridge","sin(dayofyear)"]
 
 #RCreek Model - Ecoli = -191.8 + 851.4*(LOG10(SUM(rainfall,Flow)))
 
