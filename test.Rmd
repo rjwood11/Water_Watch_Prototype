@@ -157,13 +157,17 @@ USGS_prcpdf['value'] = USGS_prcpdf['value'].astype(str).astype(float)
 
 ```
 
+```{python}
+USGS_prcpdf
+
+```
 
 
 ```{python}
-onedayprcp_df = USGS_prcpdf.iloc[576:672]
-twodayprcp_df = USGS_prcpdf.iloc[480:672]
-threedayprcp_df = USGS_prcpdf.iloc[384:672]
-fivedayprcp_df = USGS_prcpdf.iloc[192:672]
+onedayprcp_df = USGS_prcpdf.iloc[287:335]
+twodayprcp_df = USGS_prcpdf.iloc[239:335]
+threedayprcp_df = USGS_prcpdf.iloc[191:335]
+fivedayprcp_df = USGS_prcpdf.iloc[95:335]
 
 
 ```
