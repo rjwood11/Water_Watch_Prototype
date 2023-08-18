@@ -1,0 +1,430 @@
+---
+title: "Harpeth Conservancy's E. coli Forecast"
+---
+
+```{r warning=FALSE, setup, include=FALSE}
+
+library(rmarkdown)
+library(reticulate)
+library(tidyverse)
+library(leaflet)
+library(htmlwidgets)
+library(widgetframe)
+library(leaflet.providers)
+library(sf)
+library(leaflet.extras)
+
+Sys.which("python")
+
+use_python("C:/Users/rwjac/miniconda/python.exe")
+
+
+```
+
+```{python}
+!pip install netCDF4
+!pip install wget
+!pip install pyproj
+```
+
+```{python}
+import json
+import pandas as pd
+import requests
+import numpy as np
+from os import replace
+import datetime
+from datetime import datetime, timedelta
+import math
+import netCDF4 as nc
+import wget
+import pytz
+```
+
+
+```{python}
+time = datetime.now(pytz.timezone('US/Central'))
+
+month = time.month
+year = time.year
+day = time.day
+
+mm = time.strftime('%m')
+dd = time.strftime('%d')
+stime = time.strftime('%Y%m%d')
+
+weekago_month = (time - timedelta(days=7)).month
+weekago_year = (time - timedelta(days=7)).year
+weekago_day = (time - timedelta(days=7)).day
+
+day_of_year = time.timetuple().tm_yday
+B = 0.01721420632
+C = 81.75
+sindoy = math.sin(B * (day_of_year) - C)
+sindoy_list = [sindoy]*8
+```
+
+Pulling Temperature forecast data for each day from NWS's API.
+
+```{python}
+
+def get_temp_dict(url):
+  request = (requests.get(url).text)
+  temp_dict = json.loads(request)
+  temp_dict = temp_dict['properties']['periods'][0]
+  return temp_dict
+
+def get_temp_df(temp_dict):
+  temp_df = pd.DataFrame.from_dict(temp_dict)
+  temp_df = temp_df[['temperature', 'probabilityOfPrecipitation','windSpeed', 'windDirection']]
+  temp_df.columns = ['temperature', 'precipitation', 'windSpeed', 'windDirection']
+  return temp_df
+
+def get_temp_forecast(temp_df):
+  temp_df['temperature'] = temp_df['temperature'].astype(str).astype(int)
+  temp_forecast = temp_df['temperature'][1]
+  return temp_forecast
+
+def pull_temp(url):
+  temp_dict = get_temp_dict(url)
+  temp_df = get_temp_df(temp_dict)
+  temp_forecast = get_temp_forecast(temp_df)
+  return temp_forecast
+
+```
+
+```{python}
+
+OHX_values = ['45,52', '39,54', '47,54', '48,45', '54,51', '48,55', '52,55', '46,50']
+
+temp_urls = []
+
+for x in OHX_values:
+  temp_urls.append("https://api.weather.gov/gridpoints/OHX/{}/forecast".format(x))
+  
+```
+
+
+
+```{python}
+
+temp_list = []
+
+for x in temp_urls:
+  temp_forecast = pull_temp(x)
+  temp_list.append(temp_forecast)
+
+print(temp_list)
+
+```
+
+Pulling Flow Data from USGS
+
+```{python}
+
+flow_sites = ['03431700', '03433500', '03434500', '03432350', '03431060', '03434500', '03431700', '03431060']
+
+flow_urls = []
+
+for x in flow_sites:
+  flow_urls.append("https://waterservices.usgs.gov/nwis/iv/?format=json&sites={}&startDT={}-{}-{}T04:00-0500&endDT={}-{}-{}T05:00-0500&parameterCd=00060&siteStatus=all".format(x, year, month, day, year, month, day).format(x))
+
+```
+
+```{python}
+
+def pull_floworgage(url):
+  data = json.loads(requests.get(url).text)
+  data = data['value']['timeSeries'][0]['values'][0]['value']
+  df = pd.DataFrame.from_dict(data)
+  df['value'] = df['value'].astype(str).astype(float)
+  floworgage = df['value'].mean()
+  return floworgage
+
+```
+
+
+```{python}
+
+flow_list = []
+
+for x in flow_urls:
+  flow = pull_floworgage(x)
+  flow_list.append(flow)
+
+print(flow_list)
+
+```
+Pulling precipitation data
+
+The precipitation data are quality-controlled, multi-sensor (radar and rain gauge) precipitation estimates obtained from National Weather Service (NWS) River Forecast Centers (RFCs) and mosaicked by National Centers for Environmental Prediction (NCEP). 
+
+```{python}
+def get_dataset(url):
+  retrieved_file = wget.download(url)
+  dataset = nc.Dataset(retrieved_file)
+  return dataset
+
+def get_time(url):
+  dataset = get_dataset(url)
+  time_array = dataset['time'][:].toflex()
+  time = time_array['_data'][()]
+  datetime_obj = datetime.fromtimestamp(time)
+  return datetime_obj.isoformat()
+
+def create_prcp_array(dataset):
+  prcp_array = dataset['observation'][473:487, 789:796]
+  prcp_array = prcp_array.toflex()
+  return prcp_array
+
+def get_prcp(array):
+  prcp = []
+  xcrsfordf = []
+  ycrsfordf = []
+  for i in range (0, 14):
+    for n in range (0, 7):
+     prcp.append(array[i]['_data'][n])
+     xcrsfordf.append(789 + n)
+     ycrsfordf.append(473 + i)
+  return prcp, xcrsfordf, ycrsfordf
+
+def create_df(prcp, xcrsfordf, ycrsfordf):
+  df = pd.DataFrame()
+  df['Precipitation'] = prcp
+  df['X-coordinates'] = xcrsfordf
+  df['Y-coordinates'] = ycrsfordf
+  return df
+
+def find_prcp(dataframe, xcrs, ycrs):
+  prcp_list = []
+  for (a,b) in zip(xcrs, ycrs):
+    value = dataframe.loc[dataframe['X-coordinates'].eq(a) & dataframe['Y-coordinates'].eq(b), 'Precipitation']
+    prcp_value = value.values[0]
+    prcp_list.append(prcp_value)
+  return prcp_list
+
+def pull_prcp(url, xcrs, ycrs):
+  dataset = get_dataset(url)
+  prcparray = create_prcp_array(dataset)
+  prcp_info = get_prcp(prcparray)
+  df = create_df(prcp_info[0], prcp_info[1], prcp_info[2])
+  prcp_list = find_prcp(df, xcrs, ycrs)
+  return prcp_list
+
+```
+
+```{python}
+prcp_urls = ['https://water.weather.gov/precip/downloads/{}/{}/{}/nws_precip_1day_{}_conus.nc'.format(year, mm, dd, stime),
+        'https://water.weather.gov/precip/downloads/{}/{}/{}/nws_precip_last2days_{}_conus.nc'.format(year, mm, dd, stime),
+        'https://water.weather.gov/precip/downloads/{}/{}/{}/nws_precip_last3days_{}_conus.nc'.format(year, mm, dd, stime),
+        'https://water.weather.gov/precip/downloads/{}/{}/{}/nws_precip_last5days_{}_conus.nc'.format(year, mm, dd, stime),
+        'https://water.weather.gov/precip/downloads/{}/{}/{}/nws_precip_last7days_{}_conus.nc'.format(year, mm, dd, stime)]
+
+xcrs = [792, 789, 792, 795, 795, 792, 792, 793]
+ycrs = [484, 486, 479, 486, 476, 482, 478, 473]
+
+prcp_lists = []
+
+for x in prcp_urls:
+   prcp_list = pull_prcp(x, xcrs, ycrs)
+   prcp_lists.append(prcp_list)
+   
+onedayprcp_list = prcp_lists[0]
+twodayprcp_list = prcp_lists[1]
+threedayprcp_list = prcp_lists[2]
+fivedayprcp_list = prcp_lists[3]
+weekprcp_list = prcp_lists[4]
+#timestamp = get_time(urls[0])
+```
+
+Pulling Gage Height data from USGS
+
+```{python}
+
+gage_sites = ['03431700', '03433500', '03434500', '03432350', '03431060', '03434500', '03431700', '03431060']
+
+gage_urls = []
+
+for x in gage_sites:
+  gage_urls.append("https://waterservices.usgs.gov/nwis/iv/?format=json&sites={}&startDT={}-{}-{}T04:00-0500&endDT={}-{}-{}T05:00-0500&parameterCd=00065&siteStatus=all".format(x, year, month, day, year, month, day).format(x))
+
+```
+
+
+```{python}
+
+gage_list = []
+
+for x in gage_urls:
+  gage = pull_floworgage(x)
+  gage_list.append(gage)
+
+print(gage_list)
+
+```
+
+Creating a DataFrame of Forecast Values
+
+```{python}
+
+column_names = ['temp', 'onedayprcp', 'twodayprcp', 'threedayprcp', 'fivedayprcp', 'weekprcp', 'flow', 'gage', 'sin(dayofyear)']
+
+```
+
+
+```{python}
+
+index_names = ['Hwy100', 'Hwy70', 'JBlvd', 'LPike', 'MCreek', 'MBridge', 'RCreek', 'WPark']
+
+```
+
+
+```{python}
+
+forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list, threedayprcp_list, fivedayprcp_list, weekprcp_list, flow_list, gage_list, sindoy_list)), index = index_names, columns = column_names)
+
+```
+
+```{r warning=FALSE, models}
+
+# use Python data and convert into R dataframe
+forecast_df<-py$forecast_df
+
+#Add location description for use in map
+forecast_df$location <- c("Highway 100 Boat Launch", "Hwy 70 Boat Launch", "Jackson Blvd", "Lewisburg Pike", "Mill Creek Greenway", "Moran Road Bridge", "Richland Creek Greenway", "Whitsett Park")
+
+
+
+# add latitude and longitude for each sampling location
+# Sampling location order: Hwy100, Hwy70, JBlvd, LPike, MCreek, MBridge, RCreek, WPark
+
+Lat<-c('36.054361', '36.123611',  '36.112694', '35.909389',  '36.017250', '36.017167', '36.132250', '36.118361')
+
+Long<-c('-86.928806', '-87.098944', '-86.862500','-86.855806',   '-86.686250', '-86.900139', '-86.848667', '-86.724333')
+
+forecast_df$Latitude<-Lat
+forecast_df$Longitude<-Long
+
+#Hwy100 Model - Ecoli = 207.2 + 0.06577*(PROD(Flow,prev_two_rainfall)) - 61.21*(PROD(sinDOY,GH))
+
+Hwy100_pred <- 207.2+0.06577*(forecast_df["Hwy100","flow"]*forecast_df["Hwy100","twodayprcp"])-61.21*(forecast_df["Hwy100","sin(dayofyear)"]*forecast_df["Hwy100","gage"])
+
+#Hwy70 Model - Ecoli = -592.2 + 0.1694*(PROD(Flow,prev_two_rainfall)) + 1.973e+04*(INVERSE(SUM(sinDOY,TAVG),6.2684246))
+#THIS MODEL IS CURRENTLY WRONG!!
+Hwy70_pred <- -592.2 + 0.1694*(forecast_df["Hwy70","flow"]*forecast_df["Hwy70","twodayprcp"]) + 1.973e+04*(1/(forecast_df["Hwy70","sin(dayofyear)"] + forecast_df["Hwy70","temp"]))+500
+
+#JBlvd Model - Ecoli = -312.7 + 136*(SQUAREROOT(rainfall)) + 2.146e+04*(INVERSE(TMAX,8.35)) + 144.8*(INVERSE(PROD(sinDOY,TAVG),-1.2868741))
+
+JBlvd_pred <- -312.7+ 136 * sqrt(forecast_df["JBlvd","onedayprcp"]) + forecast_df["JBlvd","temp"]+2000
+
+#LPike Model - Ecoli = 294.9 - 115.9*(sinDOY) + 3.068e-05*(SQUARE(PROD(Flow,prev_two_rainfall)))
+
+LPike_pred <- 294.9 - 115.9*forecast_df["LPike","sin(dayofyear)"] + 3.068e-05*((forecast_df["LPike","flow"]*forecast_df["LPike","twodayprcp"])^2)
+
+#MCreek Model - Ecoli = -15.33 + 5.972*(SUM(Flow,prev_two_rainfall))
+
+MCreek_pred <- -15.33 + 5.972*(forecast_df["MCreek","flow"]+forecast_df["MCreek","twodayprcp"])
+
+#MBridge Model - Ecoli = 170.9 + 0.5829*(PROD(Flow,GH)) - 97.66*(SQUAREROOT(sinDOY))
+
+MBridge_pred <- 170.9 + 0.5829*(forecast_df["MBridge","flow"]*forecast_df["MBridge","gage"]) - 97.66*sqrt(forecast_df["MBridge","sin(dayofyear)"])
+
+#RCreek Model - Ecoli = -191.8 + 851.4*(LOG10(SUM(rainfall,Flow)))
+
+RCreek_pred <- -191.8 + 851.4* log10(forecast_df["RCreek","onedayprcp"]+forecast_df["RCreek","flow"])
+
+#WPark Model - Ecoli = 7.295 + 6.334*(SUM(Flow,prev_two_rainfall))
+
+WPark_pred <- 7.295 + 6.334*(forecast_df["WPark","flow"]+forecast_df["WPark","twodayprcp"])
+
+forecast_df$Ecoli_pred <- round(c(Hwy100_pred, Hwy70_pred, JBlvd_pred, LPike_pred, MCreek_pred, MBridge_pred, RCreek_pred, WPark_pred))
+
+
+```
+
+```{r warning=FALSE, status}
+
+forecast_df2 = forecast_df
+
+forecast_df$status[forecast_df2$Ecoli_pred < 150] <- "Safe"
+forecast_df$status[forecast_df2$Ecoli_pred > 150 & forecast_df2$Ecoli_pred < 250] <- "Caution"
+forecast_df$status[forecast_df2$Ecoli_pred > 250 & forecast_df2$Ecoli_pred < 500] <- "Warning"
+forecast_df$status[forecast_df2$Ecoli_pred > 500] <- "Danger"
+
+forecast_df$status[is.na(forecast_df$Ecoli_pred)] = NA
+
+
+```
+
+
+
+```{r warning=FALSE, map}
+
+forecast_df %<>% 
+  st_as_sf(coords = c("Longitude", "Latitude")) %>% 
+  st_sf(crs = 84)
+
+forecast_df<-forecast_df %>% 
+  mutate(popup = paste("<b>Location: </b>", forecast_df$location, 
+                       "<br/>",
+                       "<b>E. coli:</b>", forecast_df$Ecoli_pred,
+                       "<br/>",
+                       "<b>Status:</b>", forecast_df$status,
+                       "<br/>"))
+
+
+
+cfac<-colorFactor(c("green", "yellow", "orange", "red"), levels=c("Safe","Caution","Warning","Danger"),na.color = "grey", ordered=F)
+
+
+p<-leaflet() %>% 
+  addTiles() %>% 
+  addProviderTiles(providers$OpenStreetMap, group = 'Open SM')  %>%
+  addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
+  addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
+  setView(lng = -86.791425, lat = 36.08, zoom = 10) %>% 
+  addCircleMarkers(data = forecast_df ,popup = ~popup, color=~cfac(forecast_df$status),fill=T, stroke=T, fillOpacity = 1.0) %>%
+  addLegend("topright", 
+            colors = c("green",  "yellow", "orange", "red", "gray"),
+            labels = c("Safe","Caution","Warning", "Danger", "Data Unavailable"),
+            title = 'Public Safety Status',
+            opacity = 1) %>%
+  leaflet.extras::addResetMapButton() %>% 
+  addScaleBar(
+    position = "bottomright",
+    options = scaleBarOptions(imperial = TRUE)
+    ) %>%
+  addLayersControl(
+    position = "bottomleft",
+    baseGroups = c("Open SM","Toner","NG World"),
+    # Choose to permanently display or collapse layers control switch
+    options = layersControlOptions(collapsed = FALSE)
+    )  
+
+
+
+
+p
+
+```
+
+
+```{r warning=FALSE, mapsave, include=FALSE}
+#widget_file_size <- function(p) {
+#  d <- tempdir()
+#  withr::with_dir(d, htmlwidgets::saveWidget(p, "map.html"))
+#  f <- file.path(d, "map.html")
+#  mb <- round(file.info(f)$size / 1e6, 3)
+#  message("File is: ", mb," MB")
+#}
+#widget_file_size(p)
+
+#widget_file_size(partial_bundle(p))
+
+
+#saveWidget(here::here('/files/html/posts', 'predoc_map.html'))
+
+saveWidget(frameableWidget(p), "map.html", selfcontained = T, libdir = "lib")
+
+```
+
