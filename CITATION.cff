@@ -1,0 +1,26 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: TN Water Watch
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Ryan
+    family-names: Jackwood
+    name-particle: Ryan
+    email: ryanjackwood@harpethriver.org
+    affiliation: Harpeth Conservancy
+    orcid: 'https://orcid.org/0000-0003-4411-4643'
+  - name: Harpeth Conservancy
+    address: 215 Jamestown Park Rd. Suite 101
+    city: Nashville
+    post-code: '37027'
+    region: Tennessee
+    email: info@harpethriver.org
+    tel: '6157909767'
+    country: US
+    website: 'https://harpethconservancy.org/'
+    alias: HC
