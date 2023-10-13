@@ -6,7 +6,7 @@ email_address: ryanjackwood@harpethriver.org
 github_repo: https://github.com/rjwood11/Water_Watch_Prototype
 ---
 
-```{r echo = FALSE, message = FALSE}
+```{r echo = FALSE, message = FALSE, warning=FALSE}
 
 #  This file tells GitHub how to format the GitHub Page that ultimately gets imported to the Harpeth website
 #  This script doesn't need to be run daily, just need to finalize format when ready and it will be a static file
