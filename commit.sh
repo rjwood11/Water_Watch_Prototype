@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cd C:/Users/rwjac/Desktop/Water_Watch_Prototype
+cd C:/Users/Ryan/Desktop/Water_Watch_Prototype
 git add --all
 timestamp() {
   date +"at %H:%M:%S on %d/%m/%Y"
