@@ -17,7 +17,7 @@ library(leaflet.extras)
 
 Sys.which("python")
 
-use_python("C:/Users/rwjac/miniconda/python.exe")
+use_python("C:/Users/Ryan/miniconda3/python.exe")
 
 
 ```
@@ -614,8 +614,8 @@ cfac<-colorFactor(c("green", "yellow", "orange", "red"), levels=c("Safe","Adviso
 
 p<-leaflet() %>% 
   addTiles() %>% 
-  addProviderTiles(providers$OpenStreetMap, group = 'Open SM')  %>%
-  addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
+  #addProviderTiles(providers$OpenStreetMap, group = 'Open SM')  %>%
+  #addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
   setView(lng = -86.791425, lat = 36.08, zoom = 10) %>%
   addCircleMarkers(data = forecast_df ,popup = ~popup, color=~cfac(forecast_df$status),fill=T, stroke=T, fillOpacity = 1.0) %>%
