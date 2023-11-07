@@ -570,6 +570,13 @@ forecast_df$status[is.na(forecast_df$Ecoli_pred)] = NA
 
 ```
 
+```{r warning=FALSE, riverlabel}
+
+forecast_df$river <- c("Harpeth River", "Harpeth River", "Richland Creek", "Harpeth River", "Mill Creek", "Harpeth River", "Richland Creek", "Mill Creek")
+
+
+```
+
 ```{r warning=FALSE, map}
 
 
@@ -602,6 +609,8 @@ forecast_df <- forecast_df %>%
 forecast_df<-forecast_df %>% 
   mutate(popup = paste("<b>Location: </b>", forecast_df$location, 
                        "<br/>",
+                       "<b>River: </b>", forecast_df$river, 
+                       "<br/>",
                        "<b>E. coli:</b>", forecast_df$Ecoli_pred,
                        "<br/>",
                        "<b>Status:</b>", forecast_df$status,
@@ -619,7 +628,8 @@ p<-leaflet() %>%
   #addProviderTiles(providers$OpenStreetMap, group = 'Open SM')  %>%
   #addProviderTiles(providers$Stamen.Toner, group = 'Toner')  %>%
   addProviderTiles(providers$Esri.NatGeoWorldMap, group = 'NG World') %>%
-  setView(lng = -86.791425, lat = 36.08, zoom = 10) %>%
+  setView(lng = -86.791425, lat = 36.08, zoom = 10) %>% 
+  addPolylines(data=NashRivers,weight=2,col = 'blue') %>% 
   addCircleMarkers(data = forecast_df ,popup = ~popup, color=~cfac(forecast_df$status),fill=T, stroke=T, fillOpacity = 1.0) %>%
   addLegend("topright", 
             colors = c("green",  "yellow", "orange", "red", "gray"),
