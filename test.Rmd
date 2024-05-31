@@ -525,7 +525,7 @@ Hwy100_pred <- 207.2 + 0.06577 * (forecast_df["Hwy100","flow"] * forecast_df["Hw
 
 #### Hwy70 discharge meter is down (10/20/23)
 
-Hwy70_pred <- NA #-79.38 + 1.002*(forecast_df["Hwy70","flow"]+forecast_df["Hwy70","twodayprcp"])
+Hwy70_pred <- -79.38 + 1.002*(forecast_df["Hwy70","flow"]+forecast_df["Hwy70","twodayprcp"])
 
 #JBlvd Model - Ecoli = 117.2 + 164.2*(LN(Flow))
 
