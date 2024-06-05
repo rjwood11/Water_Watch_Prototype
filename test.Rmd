@@ -602,9 +602,11 @@ forecast_df %<>%
   st_as_sf(coords = c("Longitude", "Latitude")) %>% 
   st_sf(crs = 84)
 
+blank<-"_blank"
+
 # turn the url to HTML anchor tag
 forecast_df <- forecast_df %>% 
-  mutate(tag = paste0("<a href=", url,">", url, "</a>"))
+  mutate(tag = paste0("<a href=", url," ","target=",blank,">", url, "</a>"))
 
 forecast_df<-forecast_df %>% 
   mutate(popup = paste("<b>Location: </b>", forecast_df$location, 
