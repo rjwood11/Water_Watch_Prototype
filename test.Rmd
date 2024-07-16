@@ -612,6 +612,7 @@ data <- data %>%
 ```{r warning=FALSE, recentdata}
 
 df_most_recent <- data %>%
+  filter(!is.na(`E.coli (MPN/100 mL)`)) %>%
   group_by(location) %>%
   filter(Date == max(Date)) %>%
   ungroup()
