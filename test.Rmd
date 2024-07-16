@@ -15,6 +15,11 @@ library(leaflet.providers)
 library(sf)
 library(leaflet.extras)
 
+library(httr)
+library(readxl)
+
+library(dplyr)
+
 Sys.which("python")
 
 use_python("C:/Users/Ryan/miniconda3/python.exe")
@@ -577,6 +582,48 @@ forecast_df$river <- c("Harpeth River", "Harpeth River", "Richland Creek", "Harp
 
 ```
 
+```{r warning=FALSE, sampledata}
+
+# Dropbox direct download link
+dropbox_link <- "https://www.dropbox.com/scl/fi/p2vp6gycwvsrt385bguob/HR-UpToDate.xlsx?rlkey=vfnveptdfr3s0fqhv9sji75t8&st=a4v5dp8e&dl=1"
+
+# Specify the destination file path
+destfile <- "HR-UpToDate.xlsx"
+
+# Download the file
+GET(dropbox_link, write_disk(destfile, overwrite = TRUE))
+
+# Read the Excel file
+data <- read_excel(destfile)
+
+data$Date<-as.Date(data$Date)
+
+colnames(data)[4] <- "location"
+
+data$`E.coli (MPN/100 mL)` <- as.numeric(gsub(">", "", data$`E.coli (MPN/100 mL)`))
+
+# Round the 'value' column to the nearest whole number
+data <- data %>%
+  mutate(value = round(`E.coli (MPN/100 mL)`))
+
+
+```
+
+```{r warning=FALSE, recentdata}
+
+df_most_recent <- data %>%
+  group_by(location) %>%
+  filter(Date == max(Date)) %>%
+  ungroup()
+
+
+forecast_df <- merge(forecast_df, df_most_recent, by = "location", all.x = TRUE)
+
+
+
+```
+
+
 ```{r warning=FALSE, map}
 
 
@@ -613,9 +660,13 @@ forecast_df<-forecast_df %>%
                        "<br/>",
                        "<b>River: </b>", forecast_df$river, 
                        "<br/>",
-                       "<b>E. coli:</b>", forecast_df$Ecoli_pred,
+                       "<b>Real-time E. coli Prediction:</b>", forecast_df$Ecoli_pred,
                        "<br/>",
                        "<b>Status:</b>", forecast_df$status,
+                       "<br/>",
+                       "<b>Most Recent Sampling Date:</b>", forecast_df$Date,
+                       "<br/>",
+                       "<b>Most Recent E. coli Result:</b>", forecast_df$'E.coli (MPN/100 mL)',
                        "<br/>",
                        "<b>USGS Station:</b>", forecast_df$tag,
                        "<br/>"))
