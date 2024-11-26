@@ -522,39 +522,42 @@ Long<-c('-86.928806', '-87.098944', '-86.862500','-86.855806',   '-86.686250', '
 forecast_df$Latitude<-Lat
 forecast_df$Longitude<-Long
 
+#################################################################################################################
+################### Forecast Models - Remove NA and hashtag to reactivate model predictions #####################
+
 #Hwy100 Model - Ecoli = 207.2 + 0.06577*(PROD(Flow,prev_two_rainfall)) - 61.21*(PROD(sinDOY,GH))
 
-Hwy100_pred <- 207.2 + 0.06577 * (forecast_df["Hwy100","flow"] * forecast_df["Hwy100","twodayprcp"]) - 61.21 * (forecast_df["Hwy100","sin(dayofyear)"] * forecast_df["Hwy100","gage"])
+Hwy100_pred <-NA #207.2 + 0.06577 * (forecast_df["Hwy100","flow"] * forecast_df["Hwy100","twodayprcp"]) - 61.21 * (forecast_df["Hwy100","sin(dayofyear)"] * forecast_df["Hwy100","gage"])
 
 #Hwy70 Model - Ecoli =  -79.38 + 1.002*(SUM(Flow,prev_two_rainfall))
 
 #### Hwy70 discharge meter is down (10/20/23)
 
-Hwy70_pred <- -79.38 + 1.002*(forecast_df["Hwy70","flow"]+forecast_df["Hwy70","twodayprcp"])
+Hwy70_pred <-NA #-79.38 + 1.002*(forecast_df["Hwy70","flow"]+forecast_df["Hwy70","twodayprcp"])
 
 #JBlvd Model - Ecoli = 117.2 + 164.2*(LN(Flow))
 
-JBlvd_pred <- 17.2+164.2*log(forecast_df["JBlvd","flow"])
+JBlvd_pred <-NA #17.2+164.2*log(forecast_df["JBlvd","flow"])
 
 #LPike Model - Ecoli = 294.9 - 115.9*(sinDOY) + 3.068e-05*(SQUARE(PROD(Flow,prev_two_rainfall)))
 
-LPike_pred <- 294.9 - 115.9*forecast_df["LPike","sin(dayofyear)"] + 3.068e-05*((forecast_df["LPike","flow"]*forecast_df["LPike","twodayprcp"])^2)
+LPike_pred <-NA #294.9 - 115.9*forecast_df["LPike","sin(dayofyear)"] + 3.068e-05*((forecast_df["LPike","flow"]*forecast_df["LPike","twodayprcp"])^2)
 
 #MCreek Model - Ecoli = -15.33 + 5.972*(SUM(Flow,prev_two_rainfall))
 
-MCreek_pred <- -15.33 + 5.972*(forecast_df["MCreek","flow"]+forecast_df["MCreek","twodayprcp"])
+MCreek_pred <-NA #-15.33 + 5.972*(forecast_df["MCreek","flow"]+forecast_df["MCreek","twodayprcp"])
 
 #MBridge Model - Ecoli = 170.9 + 0.5829*(PROD(Flow,GH)) - 97.66*(SQUAREROOT(sinDOY))
 
-MBridge_pred <- 170.9 + 0.5829*(forecast_df["MBridge","flow"]*forecast_df["MBridge","gage"]) - 97.66*forecast_df["MBridge","sin(dayofyear)"]
+MBridge_pred <-NA #170.9 + 0.5829*(forecast_df["MBridge","flow"]*forecast_df["MBridge","gage"]) - 97.66*forecast_df["MBridge","sin(dayofyear)"]
 
 #RCreek Model - Ecoli = -191.8 + 851.4*(LOG10(SUM(rainfall,Flow)))
 
-RCreek_pred <- -191.8 + 851.4* log10(forecast_df["RCreek","onedayprcp"]+forecast_df["RCreek","flow"])
+RCreek_pred <-NA #-191.8 + 851.4* log10(forecast_df["RCreek","onedayprcp"]+forecast_df["RCreek","flow"])
 
 #WPark Model - Ecoli = 7.295 + 6.334*(SUM(Flow,prev_two_rainfall))
 
-WPark_pred <- 7.295 + 6.334*(forecast_df["WPark","flow"]+forecast_df["WPark","twodayprcp"])
+WPark_pred <-NA #7.295 + 6.334*(forecast_df["WPark","flow"]+forecast_df["WPark","twodayprcp"])
 
 forecast_df$Ecoli_pred <- round(c(Hwy100_pred, Hwy70_pred, JBlvd_pred, LPike_pred, MCreek_pred, MBridge_pred, RCreek_pred, WPark_pred))
 
