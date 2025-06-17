@@ -588,7 +588,7 @@ forecast_df$river <- c("Harpeth River", "Harpeth River", "Richland Creek", "Harp
 ```{r warning=FALSE, sampledata}
 
 # Dropbox direct download link
-dropbox_link <- "https://www.dropbox.com/scl/fi/p2vp6gycwvsrt385bguob/HR-UpToDate.xlsx?rlkey=vfnveptdfr3s0fqhv9sji75t8&st=a4v5dp8e&dl=1"
+dropbox_link <- "https://www.dropbox.com/scl/fi/8h7xqelfia41krdzqwq5k/HR-UpToDate.xlsx?rlkey=kb0287ib5qw3bv4qdzn3ue2v9&st=cur5pnc3&dl=1"
 
 # Specify the destination file path
 destfile <- "HR-UpToDate.xlsx"
