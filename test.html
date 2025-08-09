@@ -6120,9 +6120,9 @@ NWSforecastdata_df[&#39;temperature&#39;] = NWSforecastdata_df[&#39;temperature&
 <pre class="python"><code>
 temp_list = [temp_forecast]*8</code></pre>
 <pre class="python"><code>print(temp_forecast)</code></pre>
-<pre><code>## 92</code></pre>
+<pre><code>## 72</code></pre>
 <pre class="python"><code>print(temp_list)</code></pre>
-<pre><code>## [92, 92, 92, 92, 92, 92, 92, 92]</code></pre>
+<pre><code>## [72, 72, 72, 72, 72, 72, 72, 72]</code></pre>
 <p>Pulling precipitation data from USGS (currently using Highway 70
 location).</p>
 <pre class="python"><code>
@@ -6138,17 +6138,17 @@ USGS_prcpdf = pd.DataFrame.from_dict(USGS_prcpdata)
 USGS_prcpdf[&#39;value&#39;] = USGS_prcpdf[&#39;value&#39;].astype(str).astype(float)</code></pre>
 <pre class="python"><code>USGS_prcpdf</code></pre>
 <pre><code>##      value qualifiers                       dateTime
-## 0      0.0        [P]  2025-08-01T00:00:00.000-05:00
-## 1      0.0        [P]  2025-08-01T00:30:00.000-05:00
-## 2      0.0        [P]  2025-08-01T01:00:00.000-05:00
-## 3      0.0        [P]  2025-08-01T01:30:00.000-05:00
-## 4      0.0        [P]  2025-08-01T02:00:00.000-05:00
+## 0      0.0        [P]  2025-08-02T00:00:00.000-05:00
+## 1      0.0        [P]  2025-08-02T00:30:00.000-05:00
+## 2      0.0        [P]  2025-08-02T01:00:00.000-05:00
+## 3      0.0        [P]  2025-08-02T01:30:00.000-05:00
+## 4      0.0        [P]  2025-08-02T02:00:00.000-05:00
 ## ..     ...        ...                            ...
-## 332    0.0        [P]  2025-08-07T22:00:00.000-05:00
-## 333    0.0        [P]  2025-08-07T22:30:00.000-05:00
-## 334    0.0        [P]  2025-08-07T23:00:00.000-05:00
-## 335    0.0        [P]  2025-08-07T23:30:00.000-05:00
-## 336    0.0        [P]  2025-08-08T00:00:00.000-05:00
+## 332    0.0        [P]  2025-08-08T22:00:00.000-05:00
+## 333    0.0        [P]  2025-08-08T22:30:00.000-05:00
+## 334    0.0        [P]  2025-08-08T23:00:00.000-05:00
+## 335    0.0        [P]  2025-08-08T23:30:00.000-05:00
+## 336    0.0        [P]  2025-08-09T00:00:00.000-05:00
 ## 
 ## [337 rows x 3 columns]</code></pre>
 <pre class="python"><code>onedayprcp_df = USGS_prcpdf.iloc[287:335]
@@ -6180,7 +6180,7 @@ jblvd_fdf = pd.DataFrame.from_dict(jblvd_fdata)</code></pre>
 
 jblvd_flow = jblvd_fdf[&#39;value&#39;].sum() / 5
 print(jblvd_flow)</code></pre>
-<pre><code>## 5.7</code></pre>
+<pre><code>## 4.5600000000000005</code></pre>
 <pre class="python"><code>
 hwy100_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03433500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy100_fdata = json.loads(requests.get(hwy100_furl).text)
@@ -6189,7 +6189,7 @@ hwy100_fdf = pd.DataFrame.from_dict(hwy100_fdata)</code></pre>
 <pre class="python"><code>hwy100_fdf[&#39;value&#39;] = hwy100_fdf[&#39;value&#39;].astype(str).astype(float)
 hwy100_flow = hwy100_fdf[&#39;value&#39;].sum() / 5
 print(hwy100_flow)</code></pre>
-<pre><code>## 82.13999999999999</code></pre>
+<pre><code>## 51.84000000000001</code></pre>
 <pre class="python"><code>
 hwy70_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy70_fdata = json.loads(requests.get(hwy70_furl).text)
@@ -6198,7 +6198,7 @@ hwy70_fdf = pd.DataFrame.from_dict(hwy70_fdata)</code></pre>
 <pre class="python"><code>hwy70_fdf[&#39;value&#39;] = hwy70_fdf[&#39;value&#39;].astype(str).astype(float)
 hwy70_flow = hwy70_fdf[&#39;value&#39;].sum() / 3
 print(hwy70_flow)</code></pre>
-<pre><code>## 77.26666666666667</code></pre>
+<pre><code>## 33.666666666666664</code></pre>
 <pre class="python"><code>lpike_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03432350&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 lpike_fdata = json.loads(requests.get(lpike_furl).text)
 lpike_fdata = lpike_fdata[&#39;value&#39;][&#39;timeSeries&#39;][0][&#39;values&#39;][0][&#39;value&#39;]
@@ -6207,7 +6207,7 @@ lpike_fdf = pd.DataFrame.from_dict(lpike_fdata)
 <pre class="python"><code>lpike_fdf[&#39;value&#39;] = lpike_fdf[&#39;value&#39;].astype(str).astype(float)
 lpike_flow = lpike_fdf[&#39;value&#39;].sum() / 5
 print(lpike_flow)</code></pre>
-<pre><code>## 27.82</code></pre>
+<pre><code>## 9.879999999999999</code></pre>
 <pre class="python"><code>
 mcreek_furl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03431060&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00060&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 mcreek_fdata = json.loads(requests.get(mcreek_furl).text)
@@ -6216,16 +6216,16 @@ mcreek_fdf = pd.DataFrame.from_dict(mcreek_fdata)</code></pre>
 <pre class="python"><code>mcreek_fdf[&#39;value&#39;] = mcreek_fdf[&#39;value&#39;].astype(str).astype(float)
 mcreek_flow = mcreek_fdf[&#39;value&#39;].sum() / 5
 print(mcreek_flow)</code></pre>
-<pre><code>## 15.540000000000001</code></pre>
+<pre><code>## 3.7600000000000002</code></pre>
 <pre class="python"><code>mbridge_flow = hwy100_flow
 print(mbridge_flow)</code></pre>
-<pre><code>## 82.13999999999999</code></pre>
+<pre><code>## 51.84000000000001</code></pre>
 <pre class="python"><code>rcreek_flow = jblvd_flow
 print(rcreek_flow)</code></pre>
-<pre><code>## 5.7</code></pre>
+<pre><code>## 4.5600000000000005</code></pre>
 <pre class="python"><code>wpark_flow = mcreek_flow
 print(wpark_flow)</code></pre>
-<pre><code>## 15.540000000000001</code></pre>
+<pre><code>## 3.7600000000000002</code></pre>
 <pre class="python"><code>
 flow_list = [hwy100_flow, hwy70_flow, jblvd_flow, lpike_flow, mcreek_flow, mbridge_flow, rcreek_flow, wpark_flow]</code></pre>
 <p>Gage Height</p>
@@ -6238,7 +6238,7 @@ jblvd_gdf = pd.DataFrame.from_dict(jblvd_gdata)</code></pre>
 
 jblvd_gage = jblvd_gdf[&#39;value&#39;].sum() / 5
 print(jblvd_gage)</code></pre>
-<pre><code>## 0.65</code></pre>
+<pre><code>## 0.52</code></pre>
 <pre class="python"><code>
 hwy100_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03433500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy100_gdata = json.loads(requests.get(hwy100_gurl).text)
@@ -6247,7 +6247,7 @@ hwy100_gdf = pd.DataFrame.from_dict(hwy100_gdata)</code></pre>
 <pre class="python"><code>hwy100_gdf[&#39;value&#39;] = hwy100_gdf[&#39;value&#39;].astype(str).astype(float)
 hwy100_gage = hwy100_gdf[&#39;value&#39;].sum() / 5
 print(hwy100_gage)</code></pre>
-<pre><code>## 1.374</code></pre>
+<pre><code>## 0.834</code></pre>
 <pre class="python"><code>
 hwy70_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03434500&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 hwy70_gdata = json.loads(requests.get(hwy70_gurl).text)
@@ -6256,7 +6256,7 @@ hwy70_gdf = pd.DataFrame.from_dict(hwy70_gdata)</code></pre>
 <pre class="python"><code>hwy70_gdf[&#39;value&#39;] = hwy70_gdf[&#39;value&#39;].astype(str).astype(float)
 hwy70_gage = hwy70_gdf[&#39;value&#39;].sum() / 3
 print(hwy70_gage)</code></pre>
-<pre><code>## 1.0833333333333333</code></pre>
+<pre><code>## 0.39999999999999997</code></pre>
 <pre class="python"><code>
 lpike_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03432350&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 lpike_gdata = json.loads(requests.get(lpike_gurl).text)
@@ -6265,7 +6265,7 @@ lpike_gdf = pd.DataFrame.from_dict(lpike_gdata)</code></pre>
 <pre class="python"><code>lpike_gdf[&#39;value&#39;] = lpike_gdf[&#39;value&#39;].astype(str).astype(float)
 lpike_gage = lpike_gdf[&#39;value&#39;].sum() / 5
 print(lpike_gage)</code></pre>
-<pre><code>## 3.598</code></pre>
+<pre><code>## 1.424</code></pre>
 <pre class="python"><code>
 mcreek_gurl = &quot;https://waterservices.usgs.gov/nwis/iv/?format=json&amp;sites=03431060&amp;startDT={}-{}-{}T05:00-0500&amp;endDT={}-{}-{}T06:00-0500&amp;parameterCd=00065&amp;siteStatus=all&quot;.format(year, month, day, year, month, day)
 mcreek_gdata = json.loads(requests.get(mcreek_gurl).text)
@@ -6274,16 +6274,16 @@ mcreek_gdf = pd.DataFrame.from_dict(mcreek_gdata)</code></pre>
 <pre class="python"><code>mcreek_gdf[&#39;value&#39;] = mcreek_gdf[&#39;value&#39;].astype(str).astype(float)
 mcreek_gage = mcreek_gdf[&#39;value&#39;].sum() / 5
 print(mcreek_gage)</code></pre>
-<pre><code>## 2.432</code></pre>
+<pre><code>## 0.496</code></pre>
 <pre class="python"><code>mbridge_gage = hwy100_gage
 print(mbridge_gage)</code></pre>
-<pre><code>## 1.374</code></pre>
+<pre><code>## 0.834</code></pre>
 <pre class="python"><code>rcreek_gage = jblvd_gage
 print(rcreek_gage)</code></pre>
-<pre><code>## 0.65</code></pre>
+<pre><code>## 0.52</code></pre>
 <pre class="python"><code>wpark_gage = mcreek_gage
 print(rcreek_gage)</code></pre>
-<pre><code>## 0.65</code></pre>
+<pre><code>## 0.52</code></pre>
 <pre class="python"><code>
 gage_list = [hwy100_gage, hwy70_gage, jblvd_gage, lpike_gage, mcreek_gage, mbridge_gage, rcreek_gage, wpark_gage]</code></pre>
 <p>Creating a DataFrame of Forecast Values</p>
@@ -6294,15 +6294,15 @@ index_names = [&#39;Hwy100&#39;, &#39;Hwy70&#39;, &#39;JBlvd&#39;, &#39;LPike&#3
 <pre class="python"><code>
 forecast_df = pd.DataFrame(list(zip(temp_list, onedayprcp_list, twodayprcp_list, threedayprcp_list, fivedayprcp_list, weekprcp_list, flow_list, gage_list, sindoy_list)), index = index_names, columns = column_names)</code></pre>
 <pre class="python"><code>forecast_df</code></pre>
-<pre><code>##          temp  onedayprcp  twodayprcp  threedayprcp  fivedayprcp  weekprcp       flow      gage  sin(dayofyear)
-## Hwy100     92         0.0         0.0           0.0          0.0       0.0  82.140000  1.374000       -0.545463
-## Hwy70      92         0.0         0.0           0.0          0.0       0.0  77.266667  1.083333       -0.545463
-## JBlvd      92         0.0         0.0           0.0          0.0       0.0   5.700000  0.650000       -0.545463
-## LPike      92         0.0         0.0           0.0          0.0       0.0  27.820000  3.598000       -0.545463
-## MCreek     92         0.0         0.0           0.0          0.0       0.0  15.540000  2.432000       -0.545463
-## MBridge    92         0.0         0.0           0.0          0.0       0.0  82.140000  1.374000       -0.545463
-## RCreek     92         0.0         0.0           0.0          0.0       0.0   5.700000  0.650000       -0.545463
-## WPark      92         0.0         0.0           0.0          0.0       0.0  15.540000  2.432000       -0.545463</code></pre>
+<pre><code>##          temp  onedayprcp  twodayprcp  threedayprcp  fivedayprcp  weekprcp       flow   gage  sin(dayofyear)
+## Hwy100     72         0.0         0.0           0.0          0.0       0.0  51.840000  0.834        -0.55981
+## Hwy70      72         0.0         0.0           0.0          0.0       0.0  33.666667  0.400        -0.55981
+## JBlvd      72         0.0         0.0           0.0          0.0       0.0   4.560000  0.520        -0.55981
+## LPike      72         0.0         0.0           0.0          0.0       0.0   9.880000  1.424        -0.55981
+## MCreek     72         0.0         0.0           0.0          0.0       0.0   3.760000  0.496        -0.55981
+## MBridge    72         0.0         0.0           0.0          0.0       0.0  51.840000  0.834        -0.55981
+## RCreek     72         0.0         0.0           0.0          0.0       0.0   4.560000  0.520        -0.55981
+## WPark      72         0.0         0.0           0.0          0.0       0.0   3.760000  0.496        -0.55981</code></pre>
 <pre class="python"><code>
 #forecast_df.to_csv(&#39;Forecast_Data.csv&#39;, encoding = &#39;utf-8-sig&#39;)
 </code></pre>
@@ -6379,8 +6379,8 @@ destfile &lt;- &quot;HR-UpToDate.xlsx&quot;
 
 # Download the file
 GET(dropbox_link, write_disk(destfile, overwrite = TRUE))</code></pre>
-<pre><code>## Response [https://uc4693fdf0e9ed64cd3146c47cba.dl.dropboxusercontent.com/cd/0/get/CvFv3Tu0I5WdynmDYVth39SNUz-rGrUiZ-CAQKgl8RR3UmTEQttrAzR_Akn7eZUzs6nNTaPFjfTaM4y4T_qMJdf5lfSEKOE6KA92wYsP9puyU3TD8qwpyfN5TjCb92i4vne0TwG-J1FZAWsu4xjtPlXS/file?dl=1]
-##   Date: 2025-08-09 04:15
+<pre><code>## Response [https://uce734d87d4c544a443dfda05760.dl.dropboxusercontent.com/cd/0/get/CvHoIE8NEpvaW4Mt8PzbN3g_V3KKzB25SITSCeJjhiKMtsiN1ZZFkQeh4f4C5j4XJDA0LRFRcrYSRC-dBawrjbrbm-Rw96X5qHQmqwZtnB7pAt8d-fAPr8e4lR9sSP7n8n3uuKLMpRYSezCgKWoZhRyC/file?dl=1]
+##   Date: 2025-08-09 11:15
 ##   Status: 200
 ##   Content-Type: application/binary
 ##   Size: 77.6 kB
@@ -6488,8 +6488,8 @@ p&lt;-leaflet() %&gt;%
 
 
 p</code></pre>
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-0c0d2e48b35ffafed52f" style="width:672px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-0c0d2e48b35ffafed52f">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"NG World",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[36.054361,36.123611,36.112694,35.909389,36.01725,36.017167,36.13225,36.118361],[-86.92880599999999,-87.098944,-86.8625,-86.855806,-86.68625,-86.900139,-86.84866700000001,-86.724333],10,null,null,{"interactive":true,"className":"","stroke":true,"color":["#FFFF00","#00FF00","#FFFF00","#FFA500","#00FF00","#FFFF00","#FFA500","#00FF00"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#FFFF00","#00FF00","#FFFF00","#FFA500","#00FF00","#FFFF00","#FFA500","#00FF00"],"fillOpacity":1},null,null,["<b>Location: <\/b> Highway 100 Boat Launch <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> 253 <br/> <b>Status:<\/b> Advisory <br/> <b>Most Recent Sampling Date:<\/b> 2025-07-16 <br/> <b>Most Recent E. coli Result:<\/b> 16.4 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03433500/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03433500/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Hwy 70 Boat Launch <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> -2 <br/> <b>Status:<\/b> Safe <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-03 <br/> <b>Most Recent E. coli Result:<\/b> 47.3 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03434500/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03434500/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Jackson Blvd <br/> <b>River: <\/b> Richland Creek <br/> <b>Real-time E. coli Prediction:<\/b> 303 <br/> <b>Status:<\/b> Advisory <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 435.2 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Lewisburg Pike <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> 358 <br/> <b>Status:<\/b> Caution <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 547.5 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03432350/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03432350/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Mill Creek Greenway <br/> <b>River: <\/b> Mill Creek <br/> <b>Real-time E. coli Prediction:<\/b> 77 <br/> <b>Status:<\/b> Safe <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 82.3 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Moran Road Bridge <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> 290 <br/> <b>Status:<\/b> Advisory <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 1553.1 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03432400/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03432400/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Richland Creek Greenway <br/> <b>River: <\/b> Richland Creek <br/> <b>Real-time E. coli Prediction:<\/b> 452 <br/> <b>Status:<\/b> Caution <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 130.1 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Whitsett Park <br/> <b>River: <\/b> Mill Creek <br/> <b>Real-time E. coli Prediction:<\/b> 106 <br/> <b>Status:<\/b> Safe <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-05 <br/> <b>Most Recent E. coli Result:<\/b> 98.5 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D<\/a> <br/>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["green","yellow","orange","red","gray"],"labels":["Safe","Advisory","Caution","Warning","Data Unavailable"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"unknown","title":"Public Safety Status","extra":null,"layerId":null,"className":"info legend","group":null}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addLayersControl","args":[["Open SM","Toner","NG World"],[],{"collapsed":true,"autoZIndex":true,"position":"bottomleft"}]}],"setView":[[36.08,-86.791425],10,[]],"limits":{"lat":[35.909389,36.13225],"lng":[-87.098944,-86.68625]}},"evals":["calls.4.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x){\n  var map = this;\n  map.whenReady(function(){\n    map._initialCenter = map.getCenter();\n    map._initialZoom = map.getZoom();\n  });\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-fa374849af6f1bab2d5c" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-fa374849af6f1bab2d5c">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["Esri.NatGeoWorldMap",null,"NG World",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircleMarkers","args":[[36.054361,36.123611,36.112694,35.909389,36.01725,36.017167,36.13225,36.118361],[-86.92880599999999,-87.098944,-86.8625,-86.855806,-86.68625,-86.900139,-86.84866700000001,-86.724333],10,null,null,{"interactive":true,"className":"","stroke":true,"color":["#FFFF00","#00FF00","#FFFF00","#FFA500","#00FF00","#FFFF00","#FFA500","#00FF00"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#FFFF00","#00FF00","#FFFF00","#FFA500","#00FF00","#FFFF00","#FFA500","#00FF00"],"fillOpacity":1},null,null,["<b>Location: <\/b> Highway 100 Boat Launch <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> 236 <br/> <b>Status:<\/b> Advisory <br/> <b>Most Recent Sampling Date:<\/b> 2025-07-16 <br/> <b>Most Recent E. coli Result:<\/b> 16.4 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03433500/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03433500/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Hwy 70 Boat Launch <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> -46 <br/> <b>Status:<\/b> Safe <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-03 <br/> <b>Most Recent E. coli Result:<\/b> 47.3 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03434500/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03434500/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Jackson Blvd <br/> <b>River: <\/b> Richland Creek <br/> <b>Real-time E. coli Prediction:<\/b> 266 <br/> <b>Status:<\/b> Advisory <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 435.2 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Lewisburg Pike <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> 360 <br/> <b>Status:<\/b> Caution <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 547.5 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03432350/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03432350/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Mill Creek Greenway <br/> <b>River: <\/b> Mill Creek <br/> <b>Real-time E. coli Prediction:<\/b> 7 <br/> <b>Status:<\/b> Safe <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 82.3 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Moran Road Bridge <br/> <b>River: <\/b> Harpeth River <br/> <b>Real-time E. coli Prediction:<\/b> 251 <br/> <b>Status:<\/b> Advisory <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 1553.1 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03432400/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03432400/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Richland Creek Greenway <br/> <b>River: <\/b> Richland Creek <br/> <b>Real-time E. coli Prediction:<\/b> 369 <br/> <b>Status:<\/b> Caution <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-04 <br/> <b>Most Recent E. coli Result:<\/b> 130.1 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431700/#parameterCode=00060&period=P7D<\/a> <br/>","<b>Location: <\/b> Whitsett Park <br/> <b>River: <\/b> Mill Creek <br/> <b>Real-time E. coli Prediction:<\/b> 31 <br/> <b>Status:<\/b> Safe <br/> <b>Most Recent Sampling Date:<\/b> 2025-08-05 <br/> <b>Most Recent E. coli Result:<\/b> 98.5 <br/> <b>USGS Station:<\/b> <a href=https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D target=_blank>https://waterdata.usgs.gov/monitoring-location/03431060/#parameterCode=00060&period=P7D<\/a> <br/>"],null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["green","yellow","orange","red","gray"],"labels":["Safe","Advisory","Caution","Warning","Data Unavailable"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"unknown","title":"Public Safety Status","extra":null,"layerId":null,"className":"info legend","group":null}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addLayersControl","args":[["Open SM","Toner","NG World"],[],{"collapsed":true,"autoZIndex":true,"position":"bottomleft"}]}],"setView":[[36.08,-86.791425],10,[]],"limits":{"lat":[35.909389,36.13225],"lng":[-87.098944,-86.68625]}},"evals":["calls.4.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x){\n  var map = this;\n  map.whenReady(function(){\n    map._initialCenter = map.getCenter();\n    map._initialZoom = map.getZoom();\n  });\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 
 
 
